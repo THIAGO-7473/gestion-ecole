@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Supprimer Contrat{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0">Confirmer la suppression</h4>
+        </div>
+        <div class="card-body">
+            <p class="lead">Êtes-vous sûr de vouloir supprimer le contrat suivant ?</p>
+            
+            <div class="alert alert-warning">
+                <strong>Référence :</strong> {{ contrat.reference }}<br>
+                <strong>Type :</strong> {{ contrat.get_type_contrat_display }}<br>
+                <strong>Personnel :</strong> 
+                {% if contrat.personnel %}
+                    {{ contrat.personnel }}
+                {% elif contrat.enseignant %}
+                    {{ contrat.enseignant }}
+                {% else %}
+                    -
+                {% endif %}<br>
+                <strong>Fonction :</strong> {{ contrat.fonction }}<br>
+                <strong>Date de début :</strong> {{ contrat.date_debut|date:"d/m/Y" }}<br>
+                <strong>Date de fin :</strong> {{ contrat.date_fin|date:"d/m/Y"|default:"-" }}<br>
+                <strong>Salaire brut :</strong> {{ contrat.salaire_brut }} €<br>
+                <strong>Statut :</strong> {{ contrat.get_statut_display }}
+            </div>
+
+            <p class="text-danger">
+                <i class="fas fa-exclamation-triangle"></i>
+                Cette action est irréversible et supprimera définitivement le contrat.
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Confirmer la suppression
+                    </button>
+                    <a href="{% url 'administrative:contrat_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,15 @@
+{% extends 'finance/base_list.html' %}
+{% load static %}
+{% load finance_extras %}
+
+{% block title %}Liste des Dépenses{% endblock %}
+
+{% block content %}
+{% with title="Liste des Dépenses" subtitle="Gestion des dépenses" create_url="finance:depense_create" detail_url="finance:depense_detail" update_url="finance:depense_update" delete_url="finance:depense_delete" %}
+{% with headers="Intitulé,Description,Montant,Catégorie,Date de dépense,Moyen de paiement,Personne bénéficiaire,Service concerné,Statut,Date de validation,Actions"|split:"," %}
+{% with fields="intitule,description,montant,categorie,date_depense,moyen_paiement,personne_beneficiaire,service_concerne,statut,date_validation"|split:"," %}
+{{ block.super }}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endblock %} 

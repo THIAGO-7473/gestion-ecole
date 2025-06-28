@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Liste des Élèves</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'administrative:eleve_create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Nouvel Élève
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form method="get" class="mb-4">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <input type="text" name="q" class="form-control" placeholder="Rechercher par nom..." value="{{ query }}">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <select name="classe" class="form-control">
+                                        <option value="">Toutes les classes</option>
+                                        {% for classe in classes %}
+                                        <option value="{{ classe.id }}" {% if classe_filter == classe.id|stringformat:"s" %}selected{% endif %}>
+                                            {{ classe.nom }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <select name="sexe" class="form-control">
+                                        <option value="">Tous les sexes</option>
+                                        <option value="M" {% if sexe_filter == 'M' %}selected{% endif %}>Masculin</option>
+                                        <option value="F" {% if sexe_filter == 'F' %}selected{% endif %}>Féminin</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <input type="text" name="ecole" class="form-control" placeholder="École de provenance..." value="{{ ecole_filter }}">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i> Rechercher
+                                </button>
+                                <a href="{% url 'administrative:eleve_list' %}" class="btn btn-secondary">
+                                    <i class="fas fa-redo"></i> Réinitialiser
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th data-toggle="tooltip" title="Nom de famille">Nom</th>
+                                    <th data-toggle="tooltip" title="Postnom">Postnom</th>
+                                    <th data-toggle="tooltip" title="Prénom">Prénom</th>
+                                    <th data-toggle="tooltip" title="Genre">Sexe</th>
+                                    <th data-toggle="tooltip" title="Date de naissance">Date de Naissance</th>
+                                    <th data-toggle="tooltip" title="Classe actuelle">Classe</th>
+                                    <th data-toggle="tooltip" title="Numéro de téléphone de l'élève">Contact Élève</th>
+                                    <th data-toggle="tooltip" title="Numéro de téléphone du tuteur">Contact Tuteur</th>
+                                    <th data-toggle="tooltip" title="École précédente">École de Provenance</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for eleve in eleves %}
+                                <tr>
+                                    <td>{{ eleve.nom }}</td>
+                                    <td>{{ eleve.postnom }}</td>
+                                    <td>{{ eleve.prenom }}</td>
+                                    <td>{{ eleve.get_sexe_display }}</td>
+                                    <td>{{ eleve.date_naissance|date:"d/m/Y" }}</td>
+                                    <td>{{ eleve.classe.nom }}</td>
+                                    <td>{{ eleve.contact_eleve|default:"-" }}</td>
+                                    <td>{{ eleve.contact_tuteur }}</td>
+                                    <td>{{ eleve.ecole_provenance|default:"-" }}</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="{% url 'administrative:eleve_detail' eleve.pk %}" class="btn btn-info btn-sm" title="Voir les détails">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{% url 'administrative:eleve_update' eleve.pk %}" class="btn btn-warning btn-sm" title="Modifier">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'administrative:eleve_delete' eleve.pk %}" class="btn btn-danger btn-sm" title="Supprimer">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="10" class="text-center">Aucun élève trouvé</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+{% endblock %}
+{% endblock %} 

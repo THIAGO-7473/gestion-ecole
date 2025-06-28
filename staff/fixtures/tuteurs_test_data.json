@@ -1,0 +1,38 @@
+[
+    {
+        "model": "staff.tuteur",
+        "pk": 1,
+        "fields": {
+            "nom": "KABEYA",
+            "postnom": "MULUMBA",
+            "prenom": "Jean",
+            "contact_tuteur": "+243 812345678",
+            "email": "jean.kabeya@email.com",
+            "profession": "Médecin"
+        }
+    },
+    {
+        "model": "staff.tuteur",
+        "pk": 2,
+        "fields": {
+            "nom": "MUKENDI",
+            "postnom": "KAPINGA",
+            "prenom": "Sophie",
+            "contact_tuteur": "+243 823456789",
+            "email": "sophie.mukendi@email.com",
+            "profession": "Avocate"
+        }
+    },
+    {
+        "model": "staff.tuteur",
+        "pk": 3,
+        "fields": {
+            "nom": "LUBOYA",
+            "postnom": "KASONGO",
+            "prenom": "Pierre",
+            "contact_tuteur": "+243 834567890",
+            "email": "pierre.luboya@email.com",
+            "profession": "Ingénieur"
+        }
+    }
+]

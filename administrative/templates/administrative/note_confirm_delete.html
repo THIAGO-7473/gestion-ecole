@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Supprimer la Note{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0">Confirmation de suppression</h4>
+        </div>
+        <div class="card-body">
+            <p class="lead">Êtes-vous sûr de vouloir supprimer la note de {{ object.eleve }} pour le cours {{ object.cours }} ?</p>
+            <p>Note : {{ object.note_obtenue }}/{{ object.maximum }} ({{ object.get_type_evaluation_display }})</p>
+            <p>Cette action est irréversible.</p>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Confirmer la suppression
+                    </button>
+                    <a href="{% url 'administrative:note_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

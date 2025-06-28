@@ -1,0 +1,417 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if object %}Modifier Sanction{% else %}Nouvelle Sanction{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-control {
+        border-radius: 0.35rem;
+    }
+    .form-control:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+    .btn-primary {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+    .btn-primary:hover {
+        background-color: #2e59d9;
+        border-color: #2653d4;
+    }
+    .btn-secondary {
+        background-color: #858796;
+        border-color: #858796;
+    }
+    .btn-secondary:hover {
+        background-color: #717384;
+        border-color: #6b6d7d;
+    }
+    .flatpickr-input {
+        background-color: white;
+    }
+    .disabled-field {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        {% if object %}Modifier Sanction{% else %}Nouvelle Sanction{% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.enseignant.id_for_label }}">Enseignant</label>
+                                    {{ form.enseignant }}
+                                    {% if form.enseignant.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.enseignant.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.personnel.id_for_label }}">Personnel Administratif</label>
+                                    {{ form.personnel }}
+                                    {% if form.personnel.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.personnel.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.type_sanction.id_for_label }}">Type de sanction</label>
+                                    {{ form.type_sanction }}
+                                    {% if form.type_sanction.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.type_sanction.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.date_sanction.id_for_label }}">Date de sanction</label>
+                                    <input type="text" class="form-control datepicker" id="{{ form.date_sanction.id_for_label }}" 
+                                           name="{{ form.date_sanction.html_name }}" value="{{ form.date_sanction.value|date:'Y-m-d' }}">
+                                    {% if form.date_sanction.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.date_sanction.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.date_effet.id_for_label }}">Date d'effet</label>
+                                    <input type="text" class="form-control datepicker" id="{{ form.date_effet.id_for_label }}" 
+                                           name="{{ form.date_effet.html_name }}" value="{{ form.date_effet.value|date:'Y-m-d' }}">
+                                    {% if form.date_effet.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.date_effet.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.date_validation.id_for_label }}">Date de validation</label>
+                                    <input type="text" class="form-control datepicker" id="{{ form.date_validation.id_for_label }}" 
+                                           name="{{ form.date_validation.html_name }}" value="{{ form.date_validation.value|date:'Y-m-d' }}">
+                                    {% if form.date_validation.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.date_validation.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.duree.id_for_label }}">Durée</label>
+                                    <div class="input-group">
+                                        {{ form.duree }}
+                                        {{ form.duree_unite }}
+                                    </div>
+                                    {% if form.duree.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.duree.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.montant_retenue.id_for_label }}">Montant de la retenue</label>
+                                    <div class="input-group">
+                                        {{ form.montant_retenue }}
+                                        {{ form.devise }}
+                                    </div>
+                                    {% if form.montant_retenue.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.montant_retenue.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.motif.id_for_label }}">Motif</label>
+                            {{ form.motif }}
+                            {% if form.motif.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.motif.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.observations.id_for_label }}">Observations</label>
+                            {{ form.observations }}
+                            {% if form.observations.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.observations.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.donneur_sanction.id_for_label }}">Donneur de sanction</label>
+                            {{ form.donneur_sanction }}
+                            {% if form.donneur_sanction.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.donneur_sanction.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.statut.id_for_label }}">Statut</label>
+                            {{ form.statut }}
+                            {% if form.statut.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.statut.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Fichiers de preuves</label>
+                            {% if fichiers_existants %}
+                                <div class="mb-3">
+                                    <h6>Fichiers existants :</h6>
+                                    <ul class="list-group">
+                                        {% for fichier in fichiers_existants %}
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <i class="fas fa-file-alt"></i>
+                                                    {{ fichier.fichier.name|cut:"sanctions/preuves/" }}
+                                                    {% if fichier.description %}
+                                                        <small class="text-muted">({{ fichier.description }})</small>
+                                                    {% endif %}
+                                                </div>
+                                                <a href="{{ fichier.fichier.url }}" target="_blank" class="btn btn-sm btn-info">
+                                                    <i class="fas fa-eye"></i> Voir
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                            <div class="custom-file">
+                                {{ form.fichiers_preuves }}
+                                <label class="custom-file-label" for="{{ form.fichiers_preuves.id_for_label }}">
+                                    Choisir les fichiers
+                                </label>
+                            </div>
+                            <small class="form-text text-muted">
+                                Vous pouvez sélectionner plusieurs fichiers à la fois.
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.descriptions_preuves.id_for_label }}">
+                                Descriptions des preuves (une par ligne)
+                            </label>
+                            {{ form.descriptions_preuves }}
+                            <small class="form-text text-muted">
+                                Écrivez une description par ligne, correspondant à l'ordre des fichiers sélectionnés.
+                            </small>
+                        </div>
+
+                        <div class="form-group text-right">
+                            <a href="{% url 'staff:sanction_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Enregistrer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-group {
+    margin-bottom: 1rem;
+}
+.input-group {
+    display: flex;
+    gap: 10px;
+}
+.input-group select,
+.input-group input {
+    flex: 1;
+}
+.custom-file {
+    margin-bottom: 1rem;
+}
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialisation des datepickers
+    flatpickr(".datepicker", {
+        locale: "fr",
+        dateFormat: "Y-m-d",
+        allowInput: true,
+        altInput: true,
+        altFormat: "d/m/Y",
+        disableMobile: true
+    });
+
+    // Récupération des champs enseignant et personnel
+    const enseignantField = document.getElementById('{{ form.enseignant.id_for_label }}');
+    const personnelField = document.getElementById('{{ form.personnel.id_for_label }}');
+
+    // Fonction pour gérer la désactivation des champs
+    function handleFieldDisabling() {
+        if (enseignantField.value) {
+            personnelField.disabled = true;
+            personnelField.classList.add('disabled-field');
+            personnelField.value = '';
+        } else if (personnelField.value) {
+            enseignantField.disabled = true;
+            enseignantField.classList.add('disabled-field');
+            enseignantField.value = '';
+        } else {
+            enseignantField.disabled = false;
+            personnelField.disabled = false;
+            enseignantField.classList.remove('disabled-field');
+            personnelField.classList.remove('disabled-field');
+        }
+    }
+
+    // Écouteurs d'événements pour les changements de sélection
+    enseignantField.addEventListener('change', handleFieldDisabling);
+    personnelField.addEventListener('change', handleFieldDisabling);
+
+    // Exécution initiale pour gérer l'état des champs au chargement
+    handleFieldDisabling();
+
+    // Gestion de l'affichage des noms de fichiers
+    const fileInput = document.querySelector('input[type="file"]');
+    const fileLabel = document.querySelector('.custom-file-label');
+    
+    if (fileInput && fileLabel) {
+        fileInput.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                if (this.files.length === 1) {
+                    fileLabel.textContent = this.files[0].name;
+                } else {
+                    fileLabel.textContent = this.files.length + ' fichiers sélectionnés';
+                }
+            } else {
+                fileLabel.textContent = 'Choisir les fichiers';
+            }
+        });
+    }
+});
+</script>
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Configuration de flatpickr
+        flatpickr(".datepicker", {
+            locale: "fr",
+            dateFormat: "Y-m-d",
+            allowInput: true,
+            altInput: true,
+            altFormat: "d/m/Y",
+            disableMobile: "true"
+        });
+
+        // Récupération des champs enseignant et personnel
+        const enseignantField = document.getElementById('{{ form.enseignant.id_for_label }}');
+        const personnelField = document.getElementById('{{ form.personnel.id_for_label }}');
+
+        // Fonction pour gérer la désactivation des champs
+        function handleFieldDisabling() {
+            if (enseignantField.value) {
+                personnelField.disabled = true;
+                personnelField.classList.add('disabled-field');
+                personnelField.value = '';
+            } else if (personnelField.value) {
+                enseignantField.disabled = true;
+                enseignantField.classList.add('disabled-field');
+                enseignantField.value = '';
+            } else {
+                enseignantField.disabled = false;
+                personnelField.disabled = false;
+                enseignantField.classList.remove('disabled-field');
+                personnelField.classList.remove('disabled-field');
+            }
+        }
+
+        // Écouteurs d'événements pour les changements de sélection
+        enseignantField.addEventListener('change', handleFieldDisabling);
+        personnelField.addEventListener('change', handleFieldDisabling);
+
+        // Exécution initiale pour gérer l'état des champs au chargement
+        handleFieldDisabling();
+
+        // Gestion de l'affichage des noms de fichiers
+        const fileInput = document.querySelector('input[type="file"]');
+        const fileLabel = document.querySelector('.custom-file-label');
+        
+        if (fileInput && fileLabel) {
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    if (this.files.length === 1) {
+                        fileLabel.textContent = this.files[0].name;
+                    } else {
+                        fileLabel.textContent = this.files.length + ' fichiers sélectionnés';
+                    }
+                } else {
+                    fileLabel.textContent = 'Choisir les fichiers';
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %} 

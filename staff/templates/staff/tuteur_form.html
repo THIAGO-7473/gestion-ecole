@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if object %}Modifier le Tuteur{% else %}Nouveau Tuteur{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-user-friends"></i>
+                        {% if object %}Modifier le Tuteur{% else %}Nouveau Tuteur{% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.nom.id_for_label }}">{{ form.nom.label }}</label>
+                                    {{ form.nom }}
+                                    {% if form.nom.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.nom.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.postnom.id_for_label }}">{{ form.postnom.label }}</label>
+                                    {{ form.postnom }}
+                                    {% if form.postnom.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.postnom.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.prenom.id_for_label }}">{{ form.prenom.label }}</label>
+                                    {{ form.prenom }}
+                                    {% if form.prenom.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.prenom.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.contact_tuteur.id_for_label }}">{{ form.contact_tuteur.label }}</label>
+                                    {{ form.contact_tuteur }}
+                                    {% if form.contact_tuteur.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.contact_tuteur.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                                    {{ form.email }}
+                                    {% if form.email.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.email.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="{{ form.profession.id_for_label }}">{{ form.profession.label }}</label>
+                                    {{ form.profession }}
+                                    {% if form.profession.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.profession.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Enregistrer
+                                </button>
+                                <a href="{% url 'staff:tuteur_list' %}" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Annuler
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

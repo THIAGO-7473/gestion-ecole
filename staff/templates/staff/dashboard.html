@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load staff_extras %}
+
+{% block title %}Tableau de bord - Staff{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.css">
+<style>
+    .dashboard-card {
+        transition: transform 0.3s ease;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+    }
+    .stat-card {
+        border-left: 4px solid #4e73df;
+    }
+    .stat-card.warning {
+        border-left-color: #f6c23e;
+    }
+    .stat-card.success {
+        border-left-color: #1cc88a;
+    }
+    .stat-card.danger {
+        border-left-color: #e74a3b;
+    }
+    .stat-card.info {
+        border-left-color: #36b9cc;
+    }
+    .chart-container {
+        position: relative;
+        height: 300px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- En-tête -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Tableau de bord</h1>
+        <div class="d-flex">
+            <a href="{% url 'staff:export_personnel' 'pdf' %}" class="btn btn-sm btn-primary shadow-sm mr-2">
+                <i class="fas fa-download fa-sm text-white-50"></i> Exporter Personnel
+            </a>
+            <a href="{% url 'staff:export_enseignant' 'pdf' %}" class="btn btn-sm btn-primary shadow-sm">
+                <i class="fas fa-download fa-sm text-white-50"></i> Exporter Enseignants
+            </a>
+        </div>
+    </div>
+
+    <!-- Cartes de statistiques -->
+    <div class="row">
+        <!-- Personnel Administratif -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2 dashboard-card stat-card">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Personnel Administratif</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_personnel }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enseignants -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2 dashboard-card stat-card success">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Enseignants</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_enseignants }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-chalkboard-teacher fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sanctions -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2 dashboard-card stat-card warning">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Sanctions</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_sanctions }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2 dashboard-card stat-card info">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Documents</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_documents }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-file-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphiques et Applications -->
+    <div class="row">
+        <!-- Graphique des sanctions -->
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Statistiques des Sanctions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="sanctionsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Applications -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Applications</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <a href="{% url 'staff:personnel_list' %}" class="btn btn-primary btn-block">
+                                <i class="fas fa-users"></i> Personnel
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <a href="{% url 'staff:enseignant_list' %}" class="btn btn-success btn-block">
+                                <i class="fas fa-chalkboard-teacher"></i> Enseignants
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <a href="{% url 'staff:sanction_list' %}" class="btn btn-warning btn-block">
+                                <i class="fas fa-exclamation-triangle"></i> Sanctions
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <a href="{% url 'staff:document_list' %}" class="btn btn-info btn-block">
+                                <i class="fas fa-file-alt"></i> Documents
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <a href="{% url 'staff:specialite_list' %}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-graduation-cap"></i> Spécialités
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <a href="{% url 'staff:tuteur_list' %}" class="btn btn-dark btn-block">
+                                <i class="fas fa-user-tie"></i> Tuteurs
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dernières sanctions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Dernières Sanctions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Référence</th>
+                                    <th>Personnel</th>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sanction in dernieres_sanctions %}
+                                <tr>
+                                    <td>{{ sanction.reference }}</td>
+                                    <td>
+                                        {% if sanction.enseignant %}
+                                            {{ sanction.enseignant.get_full_name }}
+                                        {% else %}
+                                            {{ sanction.personnel.get_full_name }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-warning">
+                                            {{ sanction.get_type_sanction_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ sanction.date_sanction|date:"d/m/Y" }}</td>
+                                    <td>
+                                        <span class="badge {% if sanction.statut == 'en_attente' %}badge-warning
+                                                         {% elif sanction.statut == 'appliquee' %}badge-success
+                                                         {% elif sanction.statut == 'annulee' %}badge-danger
+                                                         {% else %}badge-info{% endif %}">
+                                            {{ sanction.get_statut_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'staff:sanction_detail' sanction.pk %}" class="btn btn-info btn-sm">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">Aucune sanction récente</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+<script src="{% static 'staff/js/dashboard.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sanctionsData = JSON.parse('{{ sanctions_data|safe }}');
+    initializeSanctionsChart(sanctionsData);
+});
+</script>
+{% endblock %} 

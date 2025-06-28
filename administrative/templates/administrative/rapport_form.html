@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{% if rapport %}Modifier le Rapport{% else %}Nouveau Rapport{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-file-alt"></i>
+                {% if rapport %}Modifier le Rapport{% else %}Nouveau Rapport{% endif %}
+            </h5>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!-- Champs du rapport -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="{{ form.annee_scolaire.id_for_label }}" class="form-label">Année Scolaire</label>
+                        {{ form.annee_scolaire }}
+                        {% if form.annee_scolaire.errors %}
+                        <div class="invalid-feedback d-block">{{ form.annee_scolaire.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="id_date_generation" class="form-label">Date de Génération</label>
+                        <input type="date" name="date_generation" id="id_date_generation" class="form-control"
+                            value="{% if form.initial.date_generation %}{{ form.initial.date_generation|date:'Y-m-d' }}{% endif %}">
+                        {% if form.date_generation.errors %}
+                        <div class="invalid-feedback d-block">{{ form.date_generation.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="{{ form.nombre_eleves_total.id_for_label }}" class="form-label">Nombre Total
+                            d'Élèves</label>
+                        {{ form.nombre_eleves_total }}
+                        {% if form.nombre_eleves_total.errors %}
+                        <div class="invalid-feedback d-block">{{ form.nombre_eleves_total.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="{{ form.nombre_eleves_nouveaux.id_for_label }}" class="form-label">Nombre d'Élèves
+                            Nouveaux</label>
+                        {{ form.nombre_eleves_nouveaux }}
+                        {% if form.nombre_eleves_nouveaux.errors %}
+                        <div class="invalid-feedback d-block">{{ form.nombre_eleves_nouveaux.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="{{ form.nombre_eleves_exclus.id_for_label }}" class="form-label">Nombre d'Élèves
+                            Exclus</label>
+                        {{ form.nombre_eleves_exclus }}
+                        {% if form.nombre_eleves_exclus.errors %}
+                        <div class="invalid-feedback d-block">{{ form.nombre_eleves_exclus.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="{{ form.nombre_enseignants.id_for_label }}" class="form-label">Nombre
+                            d'Enseignants</label>
+                        {{ form.nombre_enseignants }}
+                        {% if form.nombre_enseignants.errors %}
+                        <div class="invalid-feedback d-block">{{ form.nombre_enseignants.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="{{ form.nombre_personnel_administratif.id_for_label }}" class="form-label">Nombre de
+                            Personnel Administratif</label>
+                        {{ form.nombre_personnel_administratif }}
+                        {% if form.nombre_personnel_administratif.errors %}
+                        <div class="invalid-feedback d-block">{{ form.nombre_personnel_administratif.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="{{ form.nombre_recompenses.id_for_label }}" class="form-label">Nombre de
+                            Récompenses</label>
+                        {{ form.nombre_recompenses }}
+                        {% if form.nombre_recompenses.errors %}
+                        <div class="invalid-feedback d-block">{{ form.nombre_recompenses.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.evenements_importants.id_for_label }}" class="form-label">Événements
+                        Importants</label>
+                    {{ form.evenements_importants }}
+                    {% if form.evenements_importants.errors %}
+                    <div class="invalid-feedback d-block">{{ form.evenements_importants.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="{{ form.responsable_validation.id_for_label }}" class="form-label">Responsable de
+                            Validation</label>
+                        {{ form.responsable_validation }}
+                        {% if form.responsable_validation.errors %}
+                        <div class="invalid-feedback d-block">{{ form.responsable_validation.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="{{ form.statut.id_for_label }}" class="form-label">Statut</label>
+                        {{ form.statut }}
+                        {% if form.statut.errors %}
+                        <div class="invalid-feedback d-block">{{ form.statut.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.observation.id_for_label }}" class="form-label">Observation</label>
+                    {{ form.observation }}
+                    {% if form.observation.errors %}
+                    <div class="invalid-feedback d-block">{{ form.observation.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.document_pdf.id_for_label }}" class="form-label">Document PDF</label>
+                    {{ form.document_pdf }}
+                    {% if form.document_pdf.errors %}
+                    <div class="invalid-feedback d-block">{{ form.document_pdf.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.documents.id_for_label }}" class="form-label">Documents supplémentaires</label>
+                    {{ form.documents }}
+                    {% if form.documents.errors %}
+                    <div class="invalid-feedback d-block">{{ form.documents.errors }}</div>
+                    {% endif %}
+                    <div class="form-text">{{ form.documents.help_text }}</div>
+                </div>
+                {% if rapport and rapport.documents.all %}
+                <div class="mb-3">
+                    <h6>Documents existants</h6>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Date d'Upload</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for doc in rapport.documents.all %}
+                                <tr>
+                                    <td>{{ doc.nom }}</td>
+                                    <td>{{ doc.date_upload|date:"d/m/Y H:i" }}</td>
+                                    <td>
+                                        <a href="{{ doc.fichier.url }}" class="btn btn-sm btn-primary" target="_blank">
+                                            <i class="fas fa-download"></i> Télécharger
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'administrative:rapport_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Retour à la liste
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

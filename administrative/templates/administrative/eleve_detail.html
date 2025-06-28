@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Détails de l'Élève</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'administrative:eleve_update' eleve.pk %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                        <a href="{% url 'administrative:eleve_list' %}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Retour
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h5>Informations Personnelles</h5>
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th style="width: 40%">Nom</th>
+                                            <td>{{ eleve.nom }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Postnom</th>
+                                            <td>{{ eleve.postnom }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Prénom</th>
+                                            <td>{{ eleve.prenom }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Sexe</th>
+                                            <td>{{ eleve.get_sexe_display }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Date de Naissance</th>
+                                            <td>{{ eleve.date_naissance|date:"d/m/Y" }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-4">
+                                    <h5>Informations Scolaires</h5>
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th style="width: 40%">Classe</th>
+                                            <td>{{ eleve.classe.nom }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>École de Provenance</th>
+                                            <td>{{ eleve.ecole_provenance|default:"Non spécifié" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Tuteur</th>
+                                            <td>{{ eleve.tuteur }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-4">
+                                    <h5>Coordonnées</h5>
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th style="width: 40%">Adresse</th>
+                                            <td>{{ eleve.adresse }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Contact Élève</th>
+                                            <td>{{ eleve.contact_eleve|default:"Non spécifié" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Contact Tuteur</th>
+                                            <td>{{ eleve.contact_tuteur }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

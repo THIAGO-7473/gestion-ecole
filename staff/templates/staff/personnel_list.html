@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Liste du Personnel Administratif{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- En-tête -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Liste du Personnel Administratif</h1>
+        <div class="d-flex gap-2">
+            <a href="{% url 'staff:dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+            <a href="{% url 'staff:personnel_create' %}" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Nouveau Personnel
+            </a>
+            <div class="btn-group">
+                <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="fas fa-file-export"></i> Exporter
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'staff:export_personnel' 'csv' %}">CSV</a></li>
+                    <li><a class="dropdown-item" href="{% url 'staff:export_personnel' 'xls' %}">Excel (XLS)</a></li>
+                    <li><a class="dropdown-item" href="{% url 'staff:export_personnel' 'xlsx' %}">Excel (XLSX)</a></li>
+                    <li><a class="dropdown-item" href="{% url 'staff:export_personnel' 'pdf' %}">PDF</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres et recherche -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-primary text-white">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control" name="search" placeholder="Rechercher..."
+                            value="{{ current_search }}">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" name="role">
+                        <option value="all">Tous les rôles</option>
+                        {% for value, label in role_choices %}
+                            <option value="{{ value }}" {% if current_role == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" name="statut">
+                        <option value="all">Tous les statuts</option>
+                        {% for value, label in statut_choices %}
+                            <option value="{{ value }}" {% if current_statut == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter"></i> Filtrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tableau du personnel -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Photo</th>
+                            <th>Matricule</th>
+                            <th>Nom</th>
+                            <th>Postnom</th>
+                            <th>Prénom</th>
+                            <th>Sexe</th>
+                            <th>Date Naissance</th>
+                            <th>Lieu Naissance</th>
+                            <th>Adresse</th>
+                            <th>Téléphone</th>
+                            <th>Email</th>
+                            <th>Rôle</th>
+                            <th>Spécialité</th>
+                            <th>Date Embauche</th>
+                            <th>Salaire</th>
+                            <th>Numéro Secu</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for membre in personnel %}
+                        <tr>
+                            <td>
+                                {% if membre.photo %}
+                                <img src="{{ membre.photo.url }}" alt="{{ membre.nom }}" class="img-thumbnail"
+                                    style="width: 50px; height: 50px; object-fit: cover;">
+                                {% else %}
+                                <img src="{% static 'img/default-avatar.png' %}" alt="Photo par défaut"
+                                    class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                                {% endif %}
+                            </td>
+                            <td>{{ membre.matricule }}</td>
+                            <td>{{ membre.nom }}</td>
+                            <td>{{ membre.postnom }}</td>
+                            <td>{{ membre.prenom }}</td>
+                            <td>{{ membre.get_sexe_display }}</td>
+                            <td>{{ membre.date_naissance|date:"d/m/Y" }}</td>
+                            <td>{{ membre.lieu_naissance }}</td>
+                            <td>{{ membre.adresse|truncatechars:30 }}</td>
+                            <td>{{ membre.telephone }}</td>
+                            <td>{{ membre.email }}</td>
+                            <td>{{ membre.get_role_display }}</td>
+                            <td>{{ membre.specialite }}</td>
+                            <td>{{ membre.date_embauche|date:"d/m/Y" }}</td>
+                            <td>{{ membre.salaire_base }} {{ membre.get_devise_display }}</td>
+                            <td>{{ membre.numero_secu|default:"-" }}</td>
+                            <td>
+                                <span class="badge {% if membre.statut == 'actif' %}bg-success
+                                                  {% elif membre.statut == 'inactif' %}bg-danger
+                                                  {% elif membre.statut == 'congé' %}bg-warning
+                                                  {% else %}bg-secondary{% endif %}">
+                                    {{ membre.get_statut_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{% url 'staff:personnel_update' membre.pk %}"
+                                        class="btn btn-primary btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'staff:personnel_delete' membre.pk %}"
+                                        class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="19" class="text-center">Aucun membre du personnel trouvé</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?page=1{% if current_search %}&search={{ current_search }}{% endif %}{% if current_role != 'all' %}&role={{ current_role }}{% endif %}{% if current_statut != 'all' %}&statut={{ current_statut }}{% endif %}"
+                            aria-label="Première">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?page={{ page_obj.previous_page_number }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_role != 'all' %}&role={{ current_role }}{% endif %}{% if current_statut != 'all' %}&statut={{ current_statut }}{% endif %}"
+                            aria-label="Précédente">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?page={{ num }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_role != 'all' %}&role={{ current_role }}{% endif %}{% if current_statut != 'all' %}&statut={{ current_statut }}{% endif %}">
+                            {{ num }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?page={{ page_obj.next_page_number }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_role != 'all' %}&role={{ current_role }}{% endif %}{% if current_statut != 'all' %}&statut={{ current_statut }}{% endif %}"
+                            aria-label="Suivante">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="?page={{ page_obj.paginator.num_pages }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_role != 'all' %}&role={{ current_role }}{% endif %}{% if current_statut != 'all' %}&statut={{ current_statut }}{% endif %}"
+                            aria-label="Dernière">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .table th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        background-color: #f8f9fc;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+    .badge {
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-group .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .page-link {
+        color: #4e73df;
+    }
+
+    .page-item.active .page-link {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+</style>
+{% endblock %}

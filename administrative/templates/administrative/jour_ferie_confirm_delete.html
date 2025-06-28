@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Supprimer Jour Férié{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-exclamation-triangle text-danger"></i>
+                        Confirmation de suppression
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <p>Êtes-vous sûr de vouloir supprimer le jour férié du {{ jour_ferie.date|date:"d/m/Y" }} ?</p>
+                    <p><strong>Description :</strong> {{ jour_ferie.description }}</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group text-right">
+                            <a href="{% url 'administrative:jour_ferie_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

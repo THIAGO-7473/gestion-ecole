@@ -1,0 +1,12 @@
+/* Styles spécifiques au formulaire utilisateur */
+.user-form-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+  }
+  
+  .user-photo-preview {
+    border: 2px dashed #dee2e6;
+    padding: 1rem;
+  }

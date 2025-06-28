@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Statistiques générales -->
+        <div class="col-md-3 mb-4">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1">Total Utilisateurs</h6>
+                            <h2 class="mb-0">{{ total_users }}</h2>
+                        </div>
+                        <i class="fas fa-users fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1">Utilisateurs Actifs</h6>
+                            <h2 class="mb-0">{{ active_users }}</h2>
+                        </div>
+                        <i class="fas fa-user-check fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card bg-warning text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1">Utilisateurs Suspendus</h6>
+                            <h2 class="mb-0">{{ suspended_users }}</h2>
+                        </div>
+                        <i class="fas fa-user-lock fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase mb-1">Âge du Compte</h6>
+                            <h2 class="mb-0">{{ user_info.account_age }}j</h2>
+                        </div>
+                        <i class="fas fa-calendar-alt fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Répartition par rôle -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Répartition par Rôle</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="roleChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Derniers utilisateurs -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Derniers Utilisateurs</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Rôle</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in recent_users %}
+                                <tr>
+                                    <td>{{ user.get_full_name }}</td>
+                                    <td><span class="badge bg-{{ user.get_role_color }}">{{ user.get_role_display }}</span></td>
+                                    <td>{{ user.date_creation|date:"d/m/Y" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Informations personnelles -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Informations Personnelles</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Dernière connexion :</strong> {{ user_info.last_login|date:"d/m/Y H:i"|default:"Jamais" }}</p>
+                            <p><strong>Rôle :</strong> <span class="badge bg-{{ request.user.get_role_color }}">{{ user_info.role }}</span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Statut :</strong> <span class="badge bg-{% if user_info.status == 'Actif' %}success{% else %}danger{% endif %}">{{ user_info.status }}</span></p>
+                            <p><strong>Compte créé le :</strong> {{ request.user.date_creation|date:"d/m/Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Configuration du graphique des rôles
+    const roleCtx = document.getElementById('roleChart').getContext('2d');
+    const roleData = {
+        labels: ['Administrateurs', 'Enseignants', 'Personnel', 'Parents', 'Élèves'],
+        datasets: [{
+            data: [
+                {{ role_distribution.admin }},
+                {{ role_distribution.enseignant }},
+                {{ role_distribution.personnel }},
+                {{ role_distribution.parent }},
+                {{ role_distribution.eleve }}
+            ],
+            backgroundColor: [
+                '#dc3545',
+                '#0d6efd',
+                '#198754',
+                '#ffc107',
+                '#6c757d'
+            ]
+        }]
+    };
+
+    new Chart(roleCtx, {
+        type: 'doughnut',
+        data: roleData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %} 

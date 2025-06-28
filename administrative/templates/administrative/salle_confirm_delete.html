@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Supprimer Salle{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-exclamation-triangle text-danger"></i>
+                        Confirmation de suppression
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <p>Êtes-vous sûr de vouloir supprimer la salle "{{ salle.nom }}" ?</p>
+                    <p><strong>Capacité :</strong> {{ salle.capacite }} personnes</p>
+                    <p><strong>Équipements :</strong> {{ salle.equipements }}</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group text-right">
+                            <a href="{% url 'administrative:salle_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

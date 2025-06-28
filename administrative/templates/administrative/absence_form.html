@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if form.instance.pk %}Modifier l'Absence{% else %}Nouvelle Absence{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-user-times"></i>
+                {% if form.instance.pk %}Modifier l'Absence{% else %}Nouvelle Absence{% endif %}
+            </h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.date.id_for_label }}">Date</label>
+                            <input type="date" 
+                                   name="{{ form.date.name }}" 
+                                   id="{{ form.date.id_for_label }}" 
+                                   class="form-control" 
+                                   value="{% if form.instance.date %}{{ form.instance.date|date:'Y-m-d' }}{% endif %}"
+                                   required>
+                            {% if form.date.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.date.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.eleve.id_for_label }}">Élève</label>
+                            {{ form.eleve }}
+                            {% if form.eleve.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.eleve.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.enseignant.id_for_label }}">Enseignant</label>
+                            {{ form.enseignant }}
+                            {% if form.enseignant.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.enseignant.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.motif.id_for_label }}">Motif</label>
+                            {{ form.motif }}
+                            {% if form.motif.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.motif.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.justification.id_for_label }}">Justification</label>
+                    {{ form.justification }}
+                    {% if form.justification.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.justification.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.observation.id_for_label }}">Observation</label>
+                    {{ form.observation }}
+                    {% if form.observation.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.observation.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                    <a href="{% url 'administrative:absence_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Récupération des champs enseignant et élève
+    const enseignantField = document.getElementById('{{ form.enseignant.id_for_label }}');
+    const eleveField = document.getElementById('{{ form.eleve.id_for_label }}');
+
+    // Fonction pour gérer la désactivation des champs
+    function handleFieldDisabling() {
+        if (enseignantField.value) {
+            eleveField.disabled = true;
+            eleveField.classList.add('disabled-field');
+            eleveField.value = '';
+        } else if (eleveField.value) {
+            enseignantField.disabled = true;
+            enseignantField.classList.add('disabled-field');
+            enseignantField.value = '';
+        } else {
+            enseignantField.disabled = false;
+            eleveField.disabled = false;
+            enseignantField.classList.remove('disabled-field');
+            eleveField.classList.remove('disabled-field');
+        }
+    }
+
+    // Écouteurs d'événements pour les changements de sélection
+    enseignantField.addEventListener('change', handleFieldDisabling);
+    eleveField.addEventListener('change', handleFieldDisabling);
+
+    // Exécution initiale pour gérer l'état des champs au chargement
+    handleFieldDisabling();
+});
+</script>
+{% endblock %}
+{% endblock %} 

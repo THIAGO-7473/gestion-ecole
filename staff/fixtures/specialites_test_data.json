@@ -1,0 +1,46 @@
+[
+    {
+        "model": "staff.specialiteenseignant",
+        "pk": 1,
+        "fields": {
+            "enseignant": 1,
+            "matiere": 1,
+            "niveau_competence": "expert",
+            "annees_experience": 8,
+            "created_at": "2024-06-08T12:00:00Z"
+        }
+    },
+    {
+        "model": "staff.specialiteenseignant",
+        "pk": 2,
+        "fields": {
+            "enseignant": 1,
+            "matiere": 2,
+            "niveau_competence": "expert",
+            "annees_experience": 6,
+            "created_at": "2024-06-08T12:00:00Z"
+        }
+    },
+    {
+        "model": "staff.specialiteenseignant",
+        "pk": 3,
+        "fields": {
+            "enseignant": 2,
+            "matiere": 3,
+            "niveau_competence": "intermediaire",
+            "annees_experience": 4,
+            "created_at": "2024-06-08T12:00:00Z"
+        }
+    },
+    {
+        "model": "staff.specialiteenseignant",
+        "pk": 4,
+        "fields": {
+            "enseignant": 3,
+            "matiere": 4,
+            "niveau_competence": "debutant",
+            "annees_experience": 2,
+            "created_at": "2024-06-08T12:00:00Z"
+        }
+    }
+]

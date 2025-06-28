@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if object %}Modifier Cours{% else %}Nouveau Cours{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        {% if object %}Modifier Cours{% else %}Nouveau Cours{% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.nom.id_for_label }}">Nom</label>
+                                    {{ form.nom }}
+                                    {% if form.nom.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.nom.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.matiere.id_for_label }}">Matière</label>
+                                    {{ form.matiere }}
+                                    {% if form.matiere.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.matiere.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.coefficient.id_for_label }}">Coefficient</label>
+                                    {{ form.coefficient }}
+                                    {% if form.coefficient.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.coefficient.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.enseignant.id_for_label }}">Enseignant</label>
+                                    {{ form.enseignant }}
+                                    {% if form.enseignant.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.enseignant.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.classe.id_for_label }}">Classe</label>
+                                    {{ form.classe }}
+                                    {% if form.classe.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.classe.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.salle.id_for_label }}">Salle</label>
+                                    {{ form.salle }}
+                                    {% if form.salle.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.salle.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.emploi_du_temps.id_for_label }}">Emploi du temps</label>
+                                    {{ form.emploi_du_temps }}
+                                    {% if form.emploi_du_temps.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.emploi_du_temps.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.description.id_for_label }}">Description</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.description.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group text-right">
+                            <a href="{% url 'administrative:cours_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Enregistrer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

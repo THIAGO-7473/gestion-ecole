@@ -1,0 +1,385 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+    {% if form.instance.pk %}Modifier{% else %}Nouveau{% endif %} Personnel Administratif
+{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1400px;">
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0 text-gray-800">
+                    {% if form.instance.pk %}
+                        Modifier le Personnel Administratif
+                    {% else %}
+                        Nouveau Personnel Administratif
+                    {% endif %}
+                </h1>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'staff:personnel_list' %}" class="btn btn-secondary btn-icon">
+                        <i class="fas fa-arrow-left"></i> Retour à la liste
+                    </a>
+                </div>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                {% csrf_token %}
+                
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="row g-4">
+                    <!-- Photo de profil -->
+                    <div class="col-md-3">
+                        <div class="card h-100 border-0">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <div class="user-photo-container mx-auto">
+                                        {% if form.instance.photo %}
+                                            <img src="{{ form.instance.photo.url }}" 
+                                                 alt="Photo de profil"
+                                                 class="user-photo"
+                                                 id="photoPreview">
+                                        {% else %}
+                                            <img src="{% static 'img/default-avatar.png' %}" 
+                                                 alt="Photo par défaut"
+                                                 class="user-photo"
+                                                 id="photoPreview">
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="{{ form.photo.id_for_label }}" class="form-label">Photo de profil</label>
+                                    {% render_field form.photo class="form-control" %}
+                                    {% if form.photo.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.photo.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informations personnelles -->
+                    <div class="col-md-9">
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.nom.id_for_label }}" class="form-label">Nom <span class="text-danger">*</span></label>
+                                    {% render_field form.nom class="form-control" %}
+                                    {% if form.nom.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.nom.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.postnom.id_for_label }}" class="form-label">Postnom <span class="text-danger">*</span></label>
+                                    {% render_field form.postnom class="form-control" %}
+                                    {% if form.postnom.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.postnom.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.prenom.id_for_label }}" class="form-label">Prénom <span class="text-danger">*</span></label>
+                                    {% render_field form.prenom class="form-control" %}
+                                    {% if form.prenom.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.prenom.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.sexe.id_for_label }}" class="form-label">Sexe <span class="text-danger">*</span></label>
+                                    {% render_field form.sexe class="form-select" %}
+                                    {% if form.sexe.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.sexe.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.date_naissance.id_for_label }}" class="form-label">Date de naissance <span class="text-danger">*</span></label>
+                                    <input type="date" 
+                                           name="{{ form.date_naissance.name }}" 
+                                           id="{{ form.date_naissance.id_for_label }}" 
+                                           class="form-control" 
+                                           value="{{ form.instance.date_naissance|date:'Y-m-d' }}">
+                                    {% if form.date_naissance.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.date_naissance.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.lieu_naissance.id_for_label }}" class="form-label">Lieu de naissance</label>
+                                    {% render_field form.lieu_naissance class="form-control" %}
+                                    {% if form.lieu_naissance.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.lieu_naissance.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.adresse.id_for_label }}" class="form-label">Adresse <span class="text-danger">*</span></label>
+                                    {% render_field form.adresse class="form-control" %}
+                                    {% if form.adresse.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.adresse.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.telephone.id_for_label }}" class="form-label">Téléphone <span class="text-danger">*</span></label>
+                                    {% render_field form.telephone class="form-control" %}
+                                    {% if form.telephone.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.telephone.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label">Email <span class="text-danger">*</span></label>
+                                    {% render_field form.email class="form-control" %}
+                                    {% if form.email.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.email.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.role.id_for_label }}" class="form-label">Rôle <span class="text-danger">*</span></label>
+                                    {% render_field form.role class="form-select" %}
+                                    {% if form.role.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.role.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.specialite.id_for_label }}" class="form-label">Spécialité</label>
+                                    {% render_field form.specialite class="form-control" %}
+                                    {% if form.specialite.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.specialite.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.date_embauche.id_for_label }}" class="form-label">Date d'embauche <span class="text-danger">*</span></label>
+                                    <input type="date" 
+                                           name="{{ form.date_embauche.name }}" 
+                                           id="{{ form.date_embauche.id_for_label }}" 
+                                           class="form-control" 
+                                           value="{{ form.instance.date_embauche|date:'Y-m-d' }}">
+                                    {% if form.date_embauche.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.date_embauche.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.salaire_base.id_for_label }}" class="form-label">Salaire de base <span class="text-danger">*</span></label>
+                                    {% render_field form.salaire_base class="form-control" %}
+                                    {% if form.salaire_base.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.salaire_base.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.devise.id_for_label }}" class="form-label">Devise <span class="text-danger">*</span></label>
+                                    {% render_field form.devise class="form-select" %}
+                                    {% if form.devise.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.devise.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.numero_secu.id_for_label }}" class="form-label">N° DE SÉCURITÉ SOCIALE</label>
+                                    {% render_field form.numero_secu class="form-control" %}
+                                    {% if form.numero_secu.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.numero_secu.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.statut.id_for_label }}" class="form-label">Statut <span class="text-danger">*</span></label>
+                                    {% render_field form.statut class="form-select" %}
+                                    {% if form.statut.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.statut.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                    <a href="{% url 'staff:personnel_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+        padding: 0.75rem 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .user-photo-container {
+        width: 200px;
+        height: 200px;
+        overflow: hidden;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        border: 1px solid #dee2e6;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .user-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .invalid-feedback {
+        display: block;
+        margin-top: 0.25rem;
+        font-size: 0.875em;
+        color: #dc3545;
+    }
+
+    .text-danger {
+        color: #dc3545;
+    }
+
+    .input-group .form-select {
+        width: auto;
+        min-width: 100px;
+    }
+
+    /* Style pour la modal d'aperçu de l'image */
+    .modal-dialog {
+        max-width: 90%;
+        margin: 1.75rem auto;
+    }
+
+    .modal-content {
+        border-radius: 0.5rem;
+    }
+
+    .modal-body {
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-body img {
+        max-width: 100%;
+        max-height: 80vh;
+        object-fit: contain;
+    }
+</style>
+
+<script>
+    // Prévisualisation de la photo
+    document.getElementById('{{ form.photo.id_for_label }}').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('photoPreview').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Validation du formulaire
+    (function() {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function(form) {
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %} 

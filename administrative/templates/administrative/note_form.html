@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if form.instance.pk %}
+        Modifier la Note
+    {% else %}
+        Nouvelle Note
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">
+        {% if form.instance.pk %}
+            Modifier la Note
+        {% else %}
+            Nouvelle Note
+        {% endif %}
+    </h2>
+
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.eleve.id_for_label }}" class="form-label">Élève</label>
+                {{ form.eleve }}
+                {% if form.eleve.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.eleve.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.cours.id_for_label }}" class="form-label">Cours</label>
+                {{ form.cours }}
+                {% if form.cours.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.cours.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.type_evaluation.id_for_label }}" class="form-label">Type d'Évaluation</label>
+                {{ form.type_evaluation }}
+                {% if form.type_evaluation.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.type_evaluation.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.note_obtenue.id_for_label }}" class="form-label">Note Obtenue</label>
+                {{ form.note_obtenue }}
+                {% if form.note_obtenue.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.note_obtenue.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.maximum.id_for_label }}" class="form-label">Maximum</label>
+                {{ form.maximum }}
+                {% if form.maximum.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.maximum.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.date_evaluation.id_for_label }}" class="form-label">Date d'Évaluation</label>
+                {{ form.date_evaluation }}
+                {% if form.date_evaluation.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.date_evaluation.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a href="{% url 'administrative:note_list' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %} 

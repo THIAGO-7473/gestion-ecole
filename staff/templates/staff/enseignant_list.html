@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Liste des Enseignants{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Liste des Enseignants</h1>
+        <div>
+            <a href="{% url 'staff:dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+            <a href="{% url 'staff:enseignant_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouvel Enseignant
+            </a>
+            <div class="btn-group">
+                <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-download"></i> Exporter
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'staff:export_enseignant' 'csv' %}">CSV</a></li>
+                    <li><a class="dropdown-item" href="{% url 'staff:export_enseignant' 'xls' %}">Excel (XLS)</a></li>
+                    <li><a class="dropdown-item" href="{% url 'staff:export_enseignant' 'xlsx' %}">Excel (XLSX)</a></li>
+                    <li><a class="dropdown-item" href="{% url 'staff:export_enseignant' 'pdf' %}">PDF</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulaire de recherche et filtres -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" name="search" class="form-control" placeholder="Rechercher..." value="{{ current_search }}">
+                </div>
+                <div class="col-md-3">
+                    <select name="statut" class="form-select">
+                        <option value="all" {% if current_statut == 'all' %}selected{% endif %}>Tous les statuts</option>
+                        {% for value, label in statut_choices %}
+                            <option value="{{ value }}" {% if current_statut == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="lieu_affectation" class="form-select">
+                        <option value="all" {% if current_lieu == 'all' %}selected{% endif %}>Tous les lieux</option>
+                        {% for value, label in lieu_choices %}
+                            <option value="{{ value }}" {% if current_lieu == value %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Filtrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tableau des enseignants -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Enseignants</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Photo</th>
+                            <th class="text-center">Matricule</th>
+                            <th class="text-center">Nom</th>
+                            <th class="text-center">Postnom</th>
+                            <th class="text-center">Prénom</th>
+                            <th class="text-center">Sexe</th>
+                            <th class="text-center">Date de naissance</th>
+                            <th class="text-center">Nationalité</th>
+                            <th class="text-center">Adresse</th>
+                            <th class="text-center">Téléphone</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center">Situation Familiale</th>
+                            <th class="text-center">Date Engagement</th>
+                            <th class="text-center">Ancienneté</th>
+                            <th class="text-center">Ancienneté Grade</th>
+                            <th class="text-center">Grade Écheant</th>
+                            <th class="text-center">Acte Nom</th>
+                            <th class="text-center">Diplôme</th>
+                            <th class="text-center">État Civil</th>
+                            <th class="text-center">Cote (%)</th>
+                            <th class="text-center">Lieu d'affectation</th>
+                            <th class="text-center">Statut</th>
+                            <th class="text-center">Salaire</th>
+                            <th class="text-center">Charge horaire</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for enseignant in enseignants %}
+                        <tr>
+                            <td class="text-center">
+                                {% if enseignant.photo %}
+                                    <img src="{{ enseignant.photo.url }}" alt="{{ enseignant.nom }}" class="img-thumbnail" style="max-width: 50px; cursor: pointer;" onclick="showImageModal(this.src)">
+                                {% else %}
+                                    <i class="fas fa-user-circle fa-2x text-secondary"></i>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">{{ enseignant.matricule }}</td>
+                            <td class="text-center">{{ enseignant.nom }}</td>
+                            <td class="text-center">{{ enseignant.postnom }}</td>
+                            <td class="text-center">{{ enseignant.prenom }}</td>
+                            <td class="text-center">{{ enseignant.get_sexe_display }}</td>
+                            <td class="text-center">{{ enseignant.date_naissance|date:"d/m/Y" }}</td>
+                            <td class="text-center">{{ enseignant.nationalite }}</td>
+                            <td class="text-center">{{ enseignant.adresse }}</td>
+                            <td class="text-center">{{ enseignant.telephone }}</td>
+                            <td class="text-center">{{ enseignant.email }}</td>
+                            <td class="text-center">{{ enseignant.situation_familiale|default:"-" }}</td>
+                            <td class="text-center">{{ enseignant.date_engagement|date:"d/m/Y" }}</td>
+                            <td class="text-center">{{ enseignant.anciennete|floatformat:0 }} {{ enseignant.anciennete_unite }}</td>
+                            <td class="text-center">{{ enseignant.anciennete_grade|floatformat:0 }} {{ enseignant.anciennete_grade_unite }}</td>
+                            <td class="text-center">{{ enseignant.grade_echeant }}</td>
+                            <td class="text-center">{{ enseignant.acte_nom|default:"-" }}</td>
+                            <td class="text-center">{{ enseignant.diplome }}</td>
+                            <td class="text-center">{{ enseignant.etat_civil|default:"-" }}</td>
+                            <td class="text-center">{{ enseignant.cote }} %</td>
+                            <td class="text-center">{{ enseignant.lieu_affectation }}</td>
+                            <td class="text-center">
+                                <span class="badge {% if enseignant.statut == 'titulaire' %}bg-success
+                                                  {% elif enseignant.statut == 'vacataire' %}bg-warning
+                                                  {% elif enseignant.statut == 'stagiaire' %}bg-info
+                                                  {% else %}bg-secondary{% endif %}">
+                                    {{ enseignant.get_statut_display }}
+                                </span>
+                            </td>
+                            <td class="text-center">{{ enseignant.salaire_base }} {{ enseignant.devise }}</td>
+                            <td class="text-center">{{ enseignant.charge_horaire }}</td>
+                            <td class="text-center">
+                                <a href="{% url 'staff:enseignant_update' enseignant.pk %}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'staff:enseignant_delete' enseignant.pk %}" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="25" class="text-center">Aucun enseignant trouvé</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if current_search %}&search={{ current_search }}{% endif %}{% if current_statut != 'all' %}&statut={{ current_statut }}{% endif %}{% if current_lieu != 'all' %}&lieu_affectation={{ current_lieu }}{% endif %}" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_statut != 'all' %}&statut={{ current_statut }}{% endif %}{% if current_lieu != 'all' %}&lieu_affectation={{ current_lieu }}{% endif %}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_statut != 'all' %}&statut={{ current_statut }}{% endif %}{% if current_lieu != 'all' %}&lieu_affectation={{ current_lieu }}{% endif %}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_statut != 'all' %}&statut={{ current_statut }}{% endif %}{% if current_lieu != 'all' %}&lieu_affectation={{ current_lieu }}{% endif %}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if current_search %}&search={{ current_search }}{% endif %}{% if current_statut != 'all' %}&statut={{ current_statut }}{% endif %}{% if current_lieu != 'all' %}&lieu_affectation={{ current_lieu }}{% endif %}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour afficher la photo en grand -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Photo de l'enseignant</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImage" src="" alt="Photo" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function showImageModal(imageSrc) {
+        const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+        document.getElementById('modalImage').src = imageSrc;
+        modal.show();
+    }
+
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/French.json"
+            },
+            "scrollX": true
+        });
+    });
+</script>
+{% endblock %}

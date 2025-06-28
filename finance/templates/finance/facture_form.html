@@ -1,0 +1,301 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if object %}Modifier la Facture{% else %}Créer une Facture{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        border: none;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .card-header {
+        background: linear-gradient(45deg, #4e73df, #224abe);
+        color: white;
+        padding: 1.5rem;
+        border-bottom: none;
+    }
+    .card-header h6 {
+        font-size: 1.2rem;
+        margin: 0;
+    }
+    .form-control {
+        border-radius: 10px;
+        border: 1px solid #d1d3e2;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+    }
+    .form-control:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+        transform: translateY(-1px);
+    }
+    .form-group label {
+        color: #5a5c69;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    .required label:after {
+        content: " *";
+        color: #e74a3b;
+    }
+    .btn-primary {
+        background: linear-gradient(45deg, #4e73df, #224abe);
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(45deg, #224abe, #4e73df);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .btn-secondary {
+        background: linear-gradient(45deg, #858796, #60616f);
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+        background: linear-gradient(45deg, #60616f, #858796);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .page-title {
+        color: #4e73df;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-group select.form-control {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%235a5c69' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        padding-right: 2.5rem;
+    }
+    .custom-file-label {
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #d1d3e2;
+    }
+    .custom-file-label::after {
+        border-radius: 0 10px 10px 0;
+        background: linear-gradient(45deg, #4e73df, #224abe);
+        color: white;
+        border: none;
+    }
+    .form-text {
+        color: #858796;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+    .card-body {
+        padding: 2rem;
+    }
+    .form-row {
+        margin-bottom: 1.5rem;
+    }
+    .form-row:last-child {
+        margin-bottom: 0;
+    }
+    .custom-file-input:lang(fr)~.custom-file-label::after {
+        content: "Parcourir";
+    }
+    .file-list {
+        margin-top: 1rem;
+    }
+    .file-list .list-group-item {
+        border-radius: 10px;
+        margin-bottom: 0.5rem;
+        transition: all 0.3s ease;
+    }
+    .file-list .list-group-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .file-list .btn-info {
+        border-radius: 50px;
+        padding: 0.25rem 0.75rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800 page-title">
+            <i class="fas fa-{% if object %}edit{% else %}plus{% endif %} mr-2"></i>
+            {% if object %}Modifier la Facture{% else %}Créer une Facture{% endif %}
+        </h1>
+        <a href="{% url 'finance:facture_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left mr-2"></i> Retour à la liste
+        </a>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold">
+                <i class="fas fa-info-circle mr-2"></i>
+                {% if object %}Modifier les informations de la facture{% else %}Remplissez les informations de la facture{% endif %}
+            </h6>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.type.id_for_label }}">Type de facture</label>
+                            {{ form.type }}
+                            {% if form.type.errors %}
+                                <div class="text-danger">{{ form.type.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.montant.id_for_label }}">Montant</label>
+                            <div class="input-group">
+                                {{ form.montant }}
+                                <div class="input-group-append">
+                                    {{ form.devise }}
+                                </div>
+                            </div>
+                            {% if form.montant.errors %}
+                                <div class="text-danger">{{ form.montant.errors }}</div>
+                            {% endif %}
+                            {% if form.devise.errors %}
+                                <div class="text-danger">{{ form.devise.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.eleve.id_for_label }}">Élève</label>
+                            {{ form.eleve }}
+                            {% if form.eleve.errors %}
+                                <div class="text-danger">{{ form.eleve.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.enseignant.id_for_label }}">Enseignant</label>
+                            {{ form.enseignant }}
+                            {% if form.enseignant.errors %}
+                                <div class="text-danger">{{ form.enseignant.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.date_echeance.id_for_label }}">Date d'échéance</label>
+                            {{ form.date_echeance }}
+                            {% if form.date_echeance.errors %}
+                                <div class="text-danger">{{ form.date_echeance.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.statut.id_for_label }}">Statut</label>
+                            {{ form.statut }}
+                            {% if form.statut.errors %}
+                                <div class="text-danger">{{ form.statut.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">Description</label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                        <div class="text-danger">{{ form.description.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.created_by.id_for_label }}">Créée par</label>
+                    {{ form.created_by }}
+                    {% if form.created_by.errors %}
+                        <div class="text-danger">{{ form.created_by.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_fichiers">Fichiers joints</label>
+                    <div class="custom-file">
+                        <input type="file" name="fichiers" multiple class="custom-file-input" id="id_fichiers">
+                        <label class="custom-file-label" for="id_fichiers">
+                            Sélectionner un ou plusieurs fichiers
+                        </label>
+                    </div>
+                    
+                    {% if object and object.fichiers.exists %}
+                        <div class="file-list">
+                            <h6 class="mb-3">Fichiers existants :</h6>
+                            <ul class="list-group">
+                                {% for fichier in object.fichiers.all %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>
+                                            <i class="fas fa-file mr-2"></i>
+                                            {{ fichier.fichier.name|slice:"-20:" }}
+                                            <small class="text-muted ml-2">
+                                                ({{ fichier.date_upload|date:"d/m/Y H:i" }})
+                                            </small>
+                                        </span>
+                                        <a href="{{ fichier.fichier.url }}" class="btn btn-sm btn-info" target="_blank">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save mr-2"></i> Enregistrer
+                    </button>
+                    <a href="{% url 'finance:facture_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times mr-2"></i> Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Mise à jour du label des fichiers sélectionnés
+    $('.custom-file-input').on('change', function() {
+        let fileNames = [];
+        for (let i = 0; i < this.files.length; i++) {
+            fileNames.push(this.files[i].name);
+        }
+        $(this).next('.custom-file-label').addClass("selected").html(
+            fileNames.length > 0 ? fileNames.join(', ') : "Sélectionner un ou plusieurs fichiers"
+        );
+    });
+</script>
+{% endblock %} 

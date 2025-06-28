@@ -1,0 +1,77 @@
+[
+    {
+        "model": "staff.sanction",
+        "pk": 1,
+        "fields": {
+            "enseignant": 1,
+            "personnel": null,
+            "type_sanction": "avertissement_oral",
+            "date_sanction": "2024-01-15",
+            "date_effet": "2024-01-15",
+            "motif": "Retard répété aux cours",
+            "duree": null,
+            "duree_unite": "jours",
+            "montant_retenue": null,
+            "devise": "FC",
+            "reference": "SAN-2024-001",
+            "donneur_sanction": "prefet_etudes",
+            "statut": "appliquee",
+            "document_path": null,
+            "date_validation": "2024-01-15",
+            "validation_par": 1,
+            "observations": "Premier avertissement",
+            "created_at": "2024-06-08T12:00:00Z",
+            "updated_at": "2024-06-08T12:00:00Z"
+        }
+    },
+    {
+        "model": "staff.sanction",
+        "pk": 2,
+        "fields": {
+            "enseignant": 2,
+            "personnel": null,
+            "type_sanction": "avertissement_ecrit",
+            "date_sanction": "2024-02-20",
+            "date_effet": "2024-02-20",
+            "motif": "Absence non justifiée",
+            "duree": null,
+            "duree_unite": "jours",
+            "montant_retenue": null,
+            "devise": "FC",
+            "reference": "SAN-2024-002",
+            "donneur_sanction": "directeur_etudes",
+            "statut": "en_attente",
+            "document_path": null,
+            "date_validation": null,
+            "validation_par": null,
+            "observations": "En attente de validation",
+            "created_at": "2024-06-08T12:00:00Z",
+            "updated_at": "2024-06-08T12:00:00Z"
+        }
+    },
+    {
+        "model": "staff.sanction",
+        "pk": 3,
+        "fields": {
+            "enseignant": 3,
+            "personnel": null,
+            "type_sanction": "retenue_salaire",
+            "date_sanction": "2024-03-10",
+            "date_effet": "2024-03-10",
+            "motif": "Non-respect du programme",
+            "duree": 1,
+            "duree_unite": "mois",
+            "montant_retenue": "200.00",
+            "devise": "$",
+            "reference": "SAN-2024-003",
+            "donneur_sanction": "directeur_etudes",
+            "statut": "appliquee",
+            "document_path": null,
+            "date_validation": "2024-03-10",
+            "validation_par": 1,
+            "observations": "Retenue sur salaire appliquée",
+            "created_at": "2024-06-08T12:00:00Z",
+            "updated_at": "2024-06-08T12:00:00Z"
+        }
+    }
+]

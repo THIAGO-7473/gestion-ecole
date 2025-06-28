@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tableau de bord - Finance{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- En-tête -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Tableau de bord - Finance</h1>
+        <div class="d-flex gap-2">
+            <a href="#" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouvelle transaction
+            </a>
+        </div>
+    </div>
+
+    <!-- Cartes de statistiques -->
+    <div class="row mb-4">
+        <!-- Revenus mensuels -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Revenus mensuels</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ revenus_mensuels }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dépenses mensuelles -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Dépenses mensuelles</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ depenses_mensuelles }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-money-bill-wave fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Solde actuel -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Solde actuel</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ solde_actuel }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-wallet fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Frais de scolarité impayés -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Frais impayés</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ frais_impayes }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions rapides -->
+    <div class="row">
+        <!-- Gestion des frais -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Gestion des frais</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a href="#" class="btn btn-primary btn-block">
+                                <i class="fas fa-list"></i> Liste des frais
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="#" class="btn btn-success btn-block">
+                                <i class="fas fa-plus"></i> Ajouter des frais
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a href="#" class="btn btn-info btn-block">
+                                <i class="fas fa-file-export"></i> Exporter la liste
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="#" class="btn btn-warning btn-block">
+                                <i class="fas fa-file-import"></i> Importer des données
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transactions -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Transactions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a href="#" class="btn btn-primary btn-block">
+                                <i class="fas fa-list"></i> Liste des transactions
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="#" class="btn btn-success btn-block">
+                                <i class="fas fa-plus"></i> Nouvelle transaction
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a href="#" class="btn btn-info btn-block">
+                                <i class="fas fa-chart-bar"></i> Rapports
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="#" class="btn btn-warning btn-block">
+                                <i class="fas fa-print"></i> Imprimer
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dernières transactions -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Dernières transactions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                    <th>Montant</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in dernieres_transactions %}
+                                <tr>
+                                    <td>{{ transaction.date|date:"d/m/Y" }}</td>
+                                    <td>{{ transaction.get_type_display }}</td>
+                                    <td>{{ transaction.description }}</td>
+                                    <td>{{ transaction.montant }}</td>
+                                    <td>
+                                        <span class="badge {% if transaction.statut == 'complete' %}bg-success
+                                                          {% elif transaction.statut == 'en_attente' %}bg-warning
+                                                          {% else %}bg-danger{% endif %}">
+                                            {{ transaction.get_statut_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="#" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="#" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">Aucune transaction récente</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .btn-block {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-block:hover {
+        transform: translateY(-1px);
+    }
+    
+    .border-left-success {
+        border-left: 0.25rem solid #1cc88a !important;
+    }
+    
+    .border-left-danger {
+        border-left: 0.25rem solid #e74a3b !important;
+    }
+    
+    .border-left-info {
+        border-left: 0.25rem solid #36b9cc !important;
+    }
+    
+    .border-left-warning {
+        border-left: 0.25rem solid #f6c23e !important;
+    }
+
+    .table th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        background-color: #f8f9fc;
+    }
+
+    .badge {
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-group .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+</style>
+{% endblock %} 

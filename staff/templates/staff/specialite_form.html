@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if object %}Modifier la Spécialité{% else %}Nouvelle Spécialité{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-graduation-cap"></i>
+                        {% if object %}Modifier la Spécialité{% else %}Nouvelle Spécialité{% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.enseignant.id_for_label }}">{{ form.enseignant.label }}</label>
+                                    {{ form.enseignant }}
+                                    {% if form.enseignant.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.enseignant.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.matiere.id_for_label }}">{{ form.matiere.label }}</label>
+                                    {{ form.matiere }}
+                                    {% if form.matiere.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.matiere.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.niveau_competence.id_for_label }}">{{ form.niveau_competence.label }}</label>
+                                    {{ form.niveau_competence }}
+                                    {% if form.niveau_competence.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.niveau_competence.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.annees_experience.id_for_label }}">{{ form.annees_experience.label }}</label>
+                                    {{ form.annees_experience }}
+                                    {% if form.annees_experience.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.annees_experience.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Enregistrer
+                                </button>
+                                <a href="{% url 'staff:specialite_list' %}" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Annuler
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

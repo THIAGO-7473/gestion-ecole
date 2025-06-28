@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ form.instance.pk|yesno:"Modifier,Nouveau" }} Document{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="mb-0">{{ form.instance.pk|yesno:"Modifier,Nouveau" }} Document</h4>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.type_document.id_for_label }}" class="form-label">Type de document</label>
+                        {{ form.type_document }}
+                        {% if form.type_document.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.type_document.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.titre.id_for_label }}" class="form-label">Titre</label>
+                        {{ form.titre }}
+                        {% if form.titre.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.titre.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.enseignant.id_for_label }}" class="form-label">Enseignant</label>
+                        {{ form.enseignant }}
+                        {% if form.enseignant.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.enseignant.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.personnel.id_for_label }}" class="form-label">Personnel Administratif</label>
+                        {{ form.personnel }}
+                        {% if form.personnel.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.personnel.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.date_depot.id_for_label }}" class="form-label">Date de dépôt</label>
+                        {% if form.instance.pk %}
+                            <input type="date" name="date_depot" id="{{ form.date_depot.id_for_label }}" 
+                                   class="form-control" 
+                                   value="{{ object.date_depot|date:'Y-m-d' }}" 
+                                   required>
+                            <small class="form-text text-muted">Valeur actuelle : {{ object.date_depot|date:"d/m/Y" }}</small>
+                        {% else %}
+                            {{ form.date_depot }}
+                        {% endif %}
+                        {% if form.date_depot.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.date_depot.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.statut.id_for_label }}" class="form-label">Statut</label>
+                        {{ form.statut }}
+                        {% if form.statut.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.statut.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.description.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.fichiers.id_for_label }}" class="form-label">Fichiers</label>
+                    {% if form.instance.pk %}
+                        <div class="mb-3">
+                            <h6>Fichiers existants :</h6>
+                            {% for fichier in form.instance.fichiers.all %}
+                            <div class="d-flex align-items-center mb-2">
+                                <a href="{{ fichier.fichier.url }}" class="btn btn-sm btn-info me-2" target="_blank">
+                                    <i class="fas fa-download"></i> {{ fichier.nom_fichier }}
+                                </a>
+                            </div>
+                            {% empty %}
+                            <p class="text-muted">Aucun fichier attaché</p>
+                            {% endfor %}
+                        </div>
+                        <div class="mb-2">
+                            <h6>Ajouter de nouveaux fichiers (optionnel) :</h6>
+                        </div>
+                    {% endif %}
+                    {{ form.fichiers }}
+                    {% if form.fichiers.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.fichiers.errors }}
+                    </div>
+                    {% endif %}
+                    <small class="form-text text-muted mt-1">
+                        <i class="fas fa-info-circle"></i>
+                        {% if form.instance.pk %}
+                            Vous pouvez sélectionner plusieurs nouveaux fichiers en maintenant la touche Ctrl (ou Cmd sur Mac).
+                        {% else %}
+                            Vous pouvez sélectionner plusieurs fichiers en maintenant la touche Ctrl (ou Cmd sur Mac).
+                        {% endif %}
+                    </small>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'staff:document_list' %}" class="btn btn-secondary">Annuler</a>
+                    <button type="submit" class="btn btn-primary">
+                        {{ form.instance.pk|yesno:"Modifier,Enregistrer" }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialisation des champs select avec Select2
+    $('#{{ form.enseignant.id_for_label }}').select2({
+        placeholder: "Sélectionner un enseignant",
+        allowClear: true
+    });
+    
+    $('#{{ form.personnel.id_for_label }}').select2({
+        placeholder: "Sélectionner un personnel administratif",
+        allowClear: true
+    });
+});
+</script>
+{% endblock %}
+{% endblock %} 

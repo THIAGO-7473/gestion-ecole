@@ -1,0 +1,14 @@
+{% extends 'finance/base_list.html' %}
+{% load static %}
+
+{% block title %}Liste des Fiches d'Emprunt{% endblock %}
+
+{% block content %}
+{% with title="Liste des Fiches d'Emprunt" subtitle="Gestion des emprunts" create_url="finance:fiche_emprunt_create" detail_url="finance:fiche_emprunt_detail" update_url="finance:fiche_emprunt_update" delete_url="finance:fiche_emprunt_delete" %}
+{% with headers="Emprunteur,Montant emprunté,Taux d'intérêt,Date d'emprunt,Date d'échéance,Montant remboursé,Statut,Description,Actions"|split:"," %}
+{% with fields="emprunteur,montant_emprunte,taux_interet,date_emprunt,date_echeance,montant_rembourse,statut,description"|split:"," %}
+{{ block.super }}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endblock %} 

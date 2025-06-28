@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Supprimer la Spécialité{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-exclamation-triangle text-danger"></i> Confirmer la suppression
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <h5><i class="icon fas fa-exclamation-triangle"></i> Attention !</h5>
+                        Vous êtes sur le point de supprimer une spécialité. Cette action est irréversible.
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th style="width: 200px;">Enseignant</th>
+                                <td>{{ object.enseignant.get_full_name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Matière</th>
+                                <td>{{ object.matiere.nom }}</td>
+                            </tr>
+                            <tr>
+                                <th>Niveau de Compétence</th>
+                                <td>{{ object.get_niveau_competence_display }}</td>
+                            </tr>
+                            <tr>
+                                <th>Années d'Expérience</th>
+                                <td>{{ object.annees_experience }}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i> Cette action ne peut pas être annulée.
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Confirmer la suppression
+                        </button>
+                        <a href="{% url 'staff:specialite_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Annuler
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,17 @@
+/* Variables CSS (thème) */
+:root {
+    --primary: #3498db;
+    --secondary: #f8f9fa;
+    --success: #28a745;
+  }
+  
+  /* Styles de base (commun à toutes les apps) */
+  .card {
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+  }
+  
+  .form-control, .form-select {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+  }

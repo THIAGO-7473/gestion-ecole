@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-file-import"></i> Importer des Utilisateurs
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Sélectionner un fichier (CSV ou Excel)</label>
+                            <input type="file" class="form-control" id="file" name="file" accept=".csv,.xlsx,.xls" required>
+                            <div class="form-text">
+                                Le fichier doit contenir les colonnes suivantes :
+                                <ul class="mt-2">
+                                    <li>last_name (Nom)</li>
+                                    <li>postnom (Postnom)</li>
+                                    <li>first_name (Prénom)</li>
+                                    <li>email (Email)</li>
+                                    <li>role (Rôle) - Valeurs possibles : 
+                                        {% for role in role_choices %}
+                                            {{ role }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </li>
+                                    <li>statut (Statut) - Valeurs possibles : 
+                                        {% for statut in statut_choices %}
+                                            {{ statut }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </li>
+                                </ul>
+                                <p class="mt-2">
+                                    <strong>Note :</strong> Le nom d'utilisateur sera généré automatiquement à partir de l'email.
+                                    Le mot de passe par défaut sera "password123".
+                                </p>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <a href="{% url 'export_users_csv' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-download"></i> Télécharger un modèle CSV
+                            </a>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'utilisateur_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Retour
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-upload"></i> Importer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

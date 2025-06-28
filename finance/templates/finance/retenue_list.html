@@ -1,0 +1,14 @@
+{% extends 'finance/base_list.html' %}
+{% load static %}
+
+{% block title %}Liste des Retenues{% endblock %}
+
+{% block content %}
+{% with title="Liste des Retenues" subtitle="Gestion des retenues" create_url="finance:retenue_create" detail_url="finance:retenue_detail" update_url="finance:retenue_update" delete_url="finance:retenue_delete" %}
+{% with headers="Heures non prestées,Impôts,Cotisations sociales,Prêt reçu,Total retenue,Actions"|split:"," %}
+{% with fields="heure_non_prestee,impots,cotisations_sociales,pret_recu,total_retenue"|split:"," %}
+{{ block.super }}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endblock %} 

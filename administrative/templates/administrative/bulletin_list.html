@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load administrative_extras %}
+
+{% block title %}Liste des Bulletins{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Liste des Bulletins</h2>
+        <a href="{% url 'administrative:bulletin_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nouveau Bulletin
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Élève</th>
+                            <th>Classe</th>
+                            <th>Année Scolaire</th>
+                            <th>Période</th>
+                            <th>Moyenne</th>
+                            <th>Rang</th>
+                            <th>Date d'édition</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bulletin in bulletins %}
+                        <tr>
+                            <td>{{ bulletin.eleve }}</td>
+                            <td>{{ bulletin.classe|default:"-" }}</td>
+                            <td>{{ bulletin.annee_scolaire }}</td>
+                            <td>{{ bulletin.periode|get_periode_display }}</td>
+                            <td>{{ bulletin.moyenne_generale }}</td>
+                            <td>{{ bulletin.rang }}</td>
+                            <td>{{ bulletin.date_edition|date:"d/m/Y" }}</td>
+                            <td>
+                                <a href="{% url 'administrative:bulletin_update' bulletin.pk %}" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'administrative:bulletin_delete' bulletin.pk %}" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center">Aucun bulletin enregistré</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

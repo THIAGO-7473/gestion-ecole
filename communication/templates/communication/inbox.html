@@ -1,0 +1,27 @@
+{% extends "communication/base_communication.html" %}
+
+{% block communication_content %}
+<div class="card">
+    <div class="card-header">
+        <h4>Boîte de réception</h4>
+    </div>
+    <div class="card-body">
+        {% if messages %}
+            <div class="list-group">
+                {% for message in messages %}
+                    <a href="{% url 'communication:message_detail' message.pk %}" class="list-group-item list-group-item-action {% if not message.is_read %}fw-bold{% endif %}">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ message.subject }}</h5>
+                            <small>{{ message.date_sent|date:"d/m/Y H:i" }}</small>
+                        </div>
+                        <p class="mb-1">De: {{ message.sender }}</p>
+                        <small class="text-muted">{{ message.content|truncatewords:20 }}</small>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-center">Aucun message dans votre boîte de réception.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Liste des Spécialités{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Liste des Spécialités</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'staff:specialite_create' %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Ajouter une Spécialité
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <form method="get" class="form-inline">
+                                <div class="input-group">
+                                    <input type="text" name="search" class="form-control" placeholder="Rechercher..." value="{{ request.GET.search }}">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Enseignant</th>
+                                    <th>Matière</th>
+                                    <th>Niveau de Compétence</th>
+                                    <th>Années d'Expérience</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for specialite in specialites %}
+                                <tr>
+                                    <td>{{ specialite.enseignant.get_full_name }}</td>
+                                    <td>{{ specialite.matiere.nom }}</td>
+                                    <td>{{ specialite.get_niveau_competence_display }}</td>
+                                    <td>{{ specialite.annees_experience }}</td>
+                                    <td>
+                                        <a href="{% url 'staff:specialite_update' specialite.pk %}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'staff:specialite_delete' specialite.pk %}" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">Aucune spécialité trouvée</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if is_paginated %}
+                    <div class="pagination">
+                        <span class="page-links">
+                            {% if page_obj.has_previous %}
+                                <a href="?page={{ page_obj.previous_page_number }}">précédent</a>
+                            {% endif %}
+                            <span class="page-current">
+                                Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}.
+                            </span>
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}">suivant</a>
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

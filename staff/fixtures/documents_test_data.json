@@ -1,0 +1,47 @@
+[
+    {
+        "model": "staff.documentpersonnel",
+        "pk": 1,
+        "fields": {
+            "type_document": "diplome",
+            "titre": "Master en Mathématiques",
+            "description": "Diplôme de Master obtenu à l'Université de Kinshasa",
+            "date_depot": "2018-09-01",
+            "enseignant": 1,
+            "personnel": null,
+            "statut": "valide",
+            "date_creation": "2024-06-08T12:00:00Z",
+            "date_modification": "2024-06-08T12:00:00Z"
+        }
+    },
+    {
+        "model": "staff.documentpersonnel",
+        "pk": 2,
+        "fields": {
+            "type_document": "diplome",
+            "titre": "Licence en Français",
+            "description": "Diplôme de Licence obtenu à l'Université de Lubumbashi",
+            "date_depot": "2019-01-15",
+            "enseignant": 2,
+            "personnel": null,
+            "statut": "valide",
+            "date_creation": "2024-06-08T12:00:00Z",
+            "date_modification": "2024-06-08T12:00:00Z"
+        }
+    },
+    {
+        "model": "staff.documentpersonnel",
+        "pk": 3,
+        "fields": {
+            "type_document": "cv",
+            "titre": "CV Professionnel",
+            "description": "Curriculum Vitae détaillé",
+            "date_depot": "2020-09-01",
+            "enseignant": 3,
+            "personnel": null,
+            "statut": "valide",
+            "date_creation": "2024-06-08T12:00:00Z",
+            "date_modification": "2024-06-08T12:00:00Z"
+        }
+    }
+]

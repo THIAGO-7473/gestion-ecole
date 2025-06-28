@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        {% if classe %}
+                            Modifier la Classe
+                        {% else %}
+                            Nouvelle Classe
+                        {% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.nom.id_for_label }}">Nom de la classe</label>
+                                    {{ form.nom }}
+                                    {% if form.nom.errors %}
+                                        <div class="text-danger">{{ form.nom.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.niveau.id_for_label }}">Niveau</label>
+                                    {{ form.niveau }}
+                                    {% if form.niveau.errors %}
+                                        <div class="text-danger">{{ form.niveau.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.filiere.id_for_label }}">Filière</label>
+                                    {{ form.filiere }}
+                                    {% if form.filiere.errors %}
+                                        <div class="text-danger">{{ form.filiere.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.effectif.id_for_label }}">Effectif</label>
+                                    {{ form.effectif }}
+                                    {% if form.effectif.errors %}
+                                        <div class="text-danger">{{ form.effectif.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="{{ form.enseignant_principal.id_for_label }}">Enseignant Principal</label>
+                                    {{ form.enseignant_principal }}
+                                    {% if form.enseignant_principal.errors %}
+                                        <div class="text-danger">{{ form.enseignant_principal.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Enregistrer
+                                </button>
+                                <a href="{% url 'administrative:classe_list' %}" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Annuler
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

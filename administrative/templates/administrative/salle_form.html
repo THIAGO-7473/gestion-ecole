@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if object %}Modifier Salle{% else %}Nouvelle Salle{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-door-open"></i>
+                        {% if object %}Modifier Salle{% else %}Nouvelle Salle{% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.nom.id_for_label }}">Nom</label>
+                                    {{ form.nom }}
+                                    {% if form.nom.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.nom.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.capacite.id_for_label }}">Capacité</label>
+                                    {{ form.capacite }}
+                                    {% if form.capacite.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.capacite.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.equipements.id_for_label }}">Équipements</label>
+                            {{ form.equipements }}
+                            {% if form.equipements.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.equipements.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group text-right">
+                            <a href="{% url 'administrative:salle_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Enregistrer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

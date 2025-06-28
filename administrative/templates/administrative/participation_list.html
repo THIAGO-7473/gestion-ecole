@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Liste des Participations{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-users"></i> Liste des Participations
+            </h5>
+            <a href="{% url 'administrative:participation_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouvelle Participation
+            </a>
+        </div>
+        <div class="card-body">
+            {% if participations %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Formation</th>
+                            <th>Participant</th>
+                            <th>Statut</th>
+                            <th>Date de Création</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for participation in participations %}
+                        <tr>
+                            <td>{{ participation.formation.intitule }}</td>
+                            <td>
+                                {% if participation.enseignant %}
+                                    {{ participation.enseignant.get_full_name }}
+                                {% else %}
+                                    {{ participation.personnel.get_full_name }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge {% if participation.statut_participation == 'present' %}bg-success
+                                                  {% elif participation.statut_participation == 'absent' %}bg-danger
+                                                  {% elif participation.statut_participation == 'abandon' %}bg-warning
+                                                  {% else %}bg-info{% endif %}">
+                                    {{ participation.get_statut_participation_display }}
+                                </span>
+                            </td>
+                            <td>{{ participation.created_at|date:"d/m/Y" }}</td>
+                            <td>
+                                <a href="{% url 'administrative:participation_detail' participation.pk %}" 
+                                   class="btn btn-info btn-sm">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'administrative:participation_update' participation.pk %}" 
+                                   class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'administrative:participation_delete' participation.pk %}" 
+                                   class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> Aucune participation enregistrée pour le moment.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

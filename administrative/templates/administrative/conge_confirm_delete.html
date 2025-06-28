@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Supprimer le Congé{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-exclamation-triangle"></i> Confirmation de suppression
+            </h5>
+        </div>
+        <div class="card-body">
+            <p class="lead">Êtes-vous sûr de vouloir supprimer ce congé ?</p>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h6>Détails du congé :</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>Personnel :</strong> 
+                            {% if conge.personnel %}
+                                {{ conge.personnel }}
+                            {% else %}
+                                {{ conge.enseignant }}
+                            {% endif %}
+                        </li>
+                        <li><strong>Type :</strong> {{ conge.get_type_conge_display }}</li>
+                        <li><strong>Période :</strong> Du {{ conge.date_debut|date:"d/m/Y" }} au {{ conge.date_fin|date:"d/m/Y" }}</li>
+                        <li><strong>Jours ouvrables :</strong> {{ conge.jours_ouvrables }}</li>
+                        <li><strong>Statut :</strong> {{ conge.get_statut_display }}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'administrative:conge_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Annuler
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Supprimer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

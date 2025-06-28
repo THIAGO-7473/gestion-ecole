@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Supprimer un enseignant{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Confirmation de suppression</h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Êtes-vous sûr de vouloir supprimer l'enseignant suivant ?</p>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-4 text-center">
+                            {% if object.photo %}
+                                <img src="{{ object.photo.url }}" alt="{{ object.nom }}" 
+                                     class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                            {% else %}
+                                <img src="{% static 'img/default-avatar.png' %}" alt="Photo par défaut"
+                                     class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <h5>Informations de l'enseignant</h5>
+                            <ul class="list-unstyled">
+                                <li><strong>Matricule:</strong> {{ object.matricule }}</li>
+                                <li><strong>Nom:</strong> {{ object.nom }}</li>
+                                <li><strong>Postnom:</strong> {{ object.postnom }}</li>
+                                <li><strong>Prénom:</strong> {{ object.prenom }}</li>
+                                <li><strong>Diplôme:</strong> {{ object.diplome }}</li>
+                                <li><strong>Statut:</strong> {{ object.get_statut_display }}</li>
+                                <li><strong>Lieu d'affectation:</strong> {{ object.lieu_affectation }}</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Attention:</strong> Cette action est irréversible. Toutes les données associées à cet enseignant seront supprimées.
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'staff:enseignant_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Confirmer la suppression
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

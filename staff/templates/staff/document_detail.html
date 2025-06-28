@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Détails du Document - {{ document.titre }}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Détails du Document</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'staff:document_update' document.pk %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                        <a href="{% url 'staff:document_delete' document.pk %}" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 30%">Titre</th>
+                                    <td>{{ document.titre }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Type</th>
+                                    <td>{{ document.get_type_document_display }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date de dépôt</th>
+                                    <td>{{ document.date_depot|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>État</th>
+                                    <td>
+                                        {% if document.est_verifie %}
+                                            <span class="badge badge-success">Vérifié</span>
+                                        {% else %}
+                                            <span class="badge badge-warning">En attente</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 30%">Personnel associé</th>
+                                    <td>
+                                        {% if document.enseignant %}
+                                            Enseignant: {{ document.enseignant.nom }} {{ document.enseignant.prenom }}
+                                        {% elif document.personnel %}
+                                            Personnel: {{ document.personnel.nom }} {{ document.personnel.prenom }}
+                                        {% else %}
+                                            Aucun
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Fichier</th>
+                                    <td>
+                                        {% if document.fichier %}
+                                            <a href="{{ document.fichier.url }}" class="btn btn-info btn-sm" target="_blank">
+                                                <i class="fas fa-download"></i> Télécharger
+                                            </a>
+                                        {% else %}
+                                            Aucun fichier
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'staff:document_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Retour à la liste
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

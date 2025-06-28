@@ -1,0 +1,10 @@
+{% extends 'finance/base_detail.html' %}
+{% load static %}
+
+{% block title %}Détail de la Bourse{% endblock %}
+
+{% block content %}
+{% with title=title subtitle="Détails de la bourse" list_url="finance:bourse_list" %}
+{{ block.super }}
+{% endwith %}
+{% endblock %} 

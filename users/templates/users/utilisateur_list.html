@@ -1,0 +1,339 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gestion des Utilisateurs{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1400px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Gestion des Utilisateurs</h1>
+        <div class="d-flex gap-2">
+            <a href="{% url 'utilisateur_create' %}" class="btn btn-primary btn-icon">
+                <i class="fas fa-user-plus"></i> Nouvel Utilisateur
+            </a>
+            <a href="{% url 'import_users' %}" class="btn btn-info btn-icon">
+                <i class="fas fa-file-import"></i> Importer
+            </a>
+            <div class="btn-group">
+                <button type="button" class="btn btn-success btn-icon dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="fas fa-file-export"></i> Exporter
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="{% url 'export_users_csv' %}"><i class="fas fa-file-csv"></i> CSV</a></li>
+                    <li><a class="dropdown-item" href="{% url 'export_users_excel' %}"><i class="fas fa-file-excel"></i> Excel</a></li>
+                    <li><a class="dropdown-item" href="{% url 'export_users_pdf' %}"><i class="fas fa-file-pdf"></i> PDF</a></li>
+                    <li><a class="dropdown-item" href="{% url 'export_users_word' %}"><i class="fas fa-file-word"></i> Word</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barre de recherche et filtres -->
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+            <div class="col-md-4">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-primary text-white border-0">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control border-0" name="search" placeholder="Rechercher..." value="{{ current_search }}">
+                    </div>
+            </div>
+            <div class="col-md-3">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-info text-white border-0">
+                            <i class="fas fa-user-tag"></i>
+                        </span>
+                        <select class="form-select border-0" name="role">
+                            <option value="all">Tous les rôles</option>
+                            {% for value, label in role_choices %}
+                                {% if value != 'all' %}
+                                    <option value="{{ value }}" {% if current_role == value %}selected{% endif %}>{{ label }}</option>
+                                {% endif %}
+                    {% endfor %}
+                </select>
+                    </div>
+            </div>
+            <div class="col-md-3">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-success text-white border-0">
+                            <i class="fas fa-user-check"></i>
+                        </span>
+                        <select class="form-select border-0" name="statut">
+                            <option value="all">Tous les statuts</option>
+                            {% for value, label in statut_choices %}
+                                {% if value != 'all' %}
+                                    <option value="{{ value }}" {% if current_statut == value %}selected{% endif %}>{{ label }}</option>
+                                {% endif %}
+                    {% endfor %}
+                </select>
+                    </div>
+            </div>
+            <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                    <i class="fas fa-filter"></i> Filtrer
+                </button>
+            </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tableau des utilisateurs -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+    <div class="table-responsive">
+                <table class="table table-hover" id="dataTable" width="100%" cellspacing="0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Photo</th>
+                            <th>Nom</th>
+                            <th>Postnom</th>
+                            <th>Prénom</th>
+                    <th>Email</th>
+                    <th>Rôle</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in utilisateurs %}
+                        <tr class="align-middle">
+                            <td>
+                                <div class="user-photo-container">
+                                    {% if user.photo_profil %}
+                                        <img src="{{ user.photo_profil.url }}" 
+                                             alt="Photo de {{ user.get_full_name }}"
+                                             class="user-photo"
+                                             onclick="showImageModal(this.src)">
+                                    {% else %}
+                                        <img src="{% static 'img/default-avatar.png' %}" 
+                                             alt="Photo par défaut"
+                                             class="user-photo"
+                                             onclick="showImageModal(this.src)">
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>{{ user.last_name }}</td>
+                            <td>{{ user.postnom }}</td>
+                            <td>{{ user.first_name }}</td>
+                    <td>{{ user.email }}</td>
+                            <td>
+                                <span class="badge rounded-pill {% if user.role == 'admin' %}bg-danger
+                                                  {% elif user.role == 'enseignant' %}bg-primary
+                                                  {% elif user.role == 'personnel' %}bg-info
+                                                  {% elif user.role == 'parent' %}bg-warning
+                                                  {% elif user.role == 'eleve' %}bg-success
+                                                  {% else %}bg-secondary{% endif %}">
+                                    {{ user.get_role_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill {% if user.statut == 'actif' %}bg-success
+                                                  {% elif user.statut == 'suspendu' %}bg-danger
+                                                  {% else %}bg-secondary{% endif %}">
+                            {{ user.get_statut_display }}
+                        </span>
+                    </td>
+                    <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'utilisateur_update' user.pk %}" class="btn btn-primary btn-icon">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                                    <a href="{% url 'utilisateur_delete' user.pk %}" class="btn btn-danger btn-icon">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                                </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                            <td colspan="8" class="text-center py-4">
+                                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">Aucun utilisateur trouvé</p>
+                            </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+            </div>
+        </div>
+    </div>
+    </div>
+
+<!-- Modal pour l'image agrandie -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Photo de profil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <img id="modalImage" src="" alt="Photo agrandie" class="img-fluid rounded">
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Styles généraux */
+    body {
+        background-color: #f8f9fc;
+    }
+
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+
+    /* Styles des boutons */
+    .btn-icon {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s ease;
+    }
+
+    .btn-icon:hover {
+        transform: translateY(-1px);
+    }
+
+    .btn-group .btn {
+        padding: 0.75rem 1rem;
+        font-size: 1.1rem;
+        transition: all 0.2s ease;
+    }
+
+    .btn-group .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    /* Styles des photos */
+    .user-photo-container {
+        width: 90px;
+        height: 90px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+    }
+
+    .user-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .user-photo-container:hover {
+        transform: scale(1.05);
+    }
+
+    .user-photo-container:hover .user-photo {
+        transform: scale(1.1);
+    }
+
+    /* Styles de la modal */
+    #imageModal .modal-dialog {
+        max-width: 50%;
+    }
+
+    #imageModal .modal-body img {
+        max-height: 60vh;
+        width: auto;
+    }
+
+    /* Styles du tableau */
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        padding: 1rem;
+    }
+
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+
+    .table-hover tbody tr {
+        transition: all 0.2s ease;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+        transform: translateX(5px);
+    }
+
+    /* Styles des badges */
+    .badge {
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+
+    /* Styles des inputs */
+    .input-group {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+
+    .input-group-text {
+        padding: 0.75rem 1rem;
+    }
+
+    .form-control, .form-select {
+        padding: 0.75rem 1rem;
+        border: none;
+        background-color: #fff;
+    }
+
+    .form-control:focus, .form-select:focus {
+        box-shadow: none;
+        background-color: #fff;
+    }
+
+    /* Animation pour le tableau vide */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .table tbody tr {
+        animation: fadeIn 0.3s ease forwards;
+    }
+</style>
+
+<script>
+    function showImageModal(src) {
+        const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+        document.getElementById('modalImage').src = src;
+        modal.show();
+    }
+
+    // Animation pour les cartes au chargement
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                card.style.transition = 'all 0.3s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+</script>
+{% endblock %}

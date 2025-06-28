@@ -1,0 +1,12 @@
+{% extends 'finance/base_confirm_delete.html' %}
+{% load static %}
+
+{% block title %}Supprimer la Facture{% endblock %}
+
+{% block content %}
+{% with title="Supprimer la Facture" subtitle="Confirmation de suppression" list_url="finance:facture_list" %}
+{% with fields=object.get_fields %}
+{{ block.super }}
+{% endwith %}
+{% endwith %}
+{% endblock %} 

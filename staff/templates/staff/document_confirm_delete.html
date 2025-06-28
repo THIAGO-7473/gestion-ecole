@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Supprimer le Document{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Supprimer le Document</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Attention !</strong> Vous êtes sur le point de supprimer le document suivant :
+                    </div>
+
+                    <table class="table table-bordered">
+                        <tr>
+                            <th style="width: 200px;">Titre</th>
+                            <td>{{ object.titre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Type</th>
+                            <td>{{ object.get_type_document_display }}</td>
+                        </tr>
+                        <tr>
+                            <th>Personnel</th>
+                            <td>
+                                {% if object.enseignant %}
+                                    {{ object.enseignant }}
+                                {% else %}
+                                    {{ object.personnel }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Date de dépôt</th>
+                            <td>{{ object.date_depot|date:"d/m/Y" }}</td>
+                        </tr>
+                    </table>
+
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <strong>Cette action est irréversible !</strong>
+                        Êtes-vous sûr de vouloir supprimer ce document ?
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Confirmer la suppression
+                        </button>
+                        <a href="{% url 'staff:document_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Annuler
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

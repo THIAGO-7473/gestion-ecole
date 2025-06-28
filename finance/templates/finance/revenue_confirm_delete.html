@@ -1,0 +1,12 @@
+{% extends 'finance/base_confirm_delete.html' %}
+{% load static %}
+
+{% block title %}Supprimer le Revenu{% endblock %}
+
+{% block content %}
+{% with title="Supprimer le Revenu" subtitle="Confirmation de suppression" list_url="finance:revenue_list" %}
+{% with fields=object.get_fields %}
+{{ block.super }}
+{% endwith %}
+{% endwith %}
+{% endblock %} 

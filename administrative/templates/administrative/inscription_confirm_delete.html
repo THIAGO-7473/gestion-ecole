@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Supprimer l'Inscription{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-exclamation-triangle"></i>
+                Confirmer la suppression
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <h5 class="alert-heading">Attention !</h5>
+                <p>Êtes-vous sûr de vouloir supprimer cette inscription ?</p>
+                <hr>
+                <p class="mb-0">
+                    <strong>Élève :</strong> {{ inscription.eleve }}<br>
+                    <strong>Date :</strong> {{ inscription.date_inscription }}<br>
+                    <strong>Classe Antérieure :</strong> {{ inscription.classe_anterieure }}<br>
+                    <strong>Classe Montante :</strong> {{ inscription.classe_montante }}<br>
+                    <strong>Pourcentage :</strong> {{ inscription.pourcentage }}%<br>
+                    <strong>Statut :</strong> {{ inscription.get_statut_display }}
+                </p>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Confirmer la suppression
+                </button>
+                <a href="{% url 'administrative:inscription_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Annuler
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

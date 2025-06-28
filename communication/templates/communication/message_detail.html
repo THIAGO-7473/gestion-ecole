@@ -1,0 +1,27 @@
+{% extends "communication/base_communication.html" %}
+
+{% block communication_content %}
+<div class="card">
+    <div class="card-header">
+        <h4>{{ message.subject }}</h4>
+    </div>
+    <div class="card-body">
+        <div class="mb-4">
+            <strong>De:</strong> {{ message.sender }}<br>
+            <strong>À:</strong> {{ message.recipient }}<br>
+            <strong>Date:</strong> {{ message.date_sent|date:"d/m/Y H:i" }}
+        </div>
+        <div class="message-content">
+            {{ message.content|linebreaks }}
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'communication:new_message' %}" class="btn btn-primary">
+            <i class="fas fa-reply"></i> Répondre
+        </a>
+        <a href="{% url 'communication:inbox' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour
+        </a>
+    </div>
+</div>
+{% endblock %} 

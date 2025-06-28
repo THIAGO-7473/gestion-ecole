@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Accueil - Gestion Scolaire{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 mb-4">Bienvenue dans le Système de Gestion Scolaire</h1>
+            <p class="lead mb-4">Une solution complète pour la gestion de votre établissement scolaire</p>
+            
+            <div class="row mt-5">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 shadow">
+                        <div class="card-body">
+                            <h3 class="card-title">Connexion</h3>
+                            <p class="card-text">Accédez à votre compte pour gérer votre établissement</p>
+                            <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Se connecter</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 shadow">
+                        <div class="card-body">
+                            <h3 class="card-title">Découvrir</h3>
+                            <p class="card-text">Explorez les fonctionnalités de notre système</p>
+                            <a href="#features" class="btn btn-outline-primary btn-lg">En savoir plus</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,12 @@
+{% extends 'finance/base_form.html' %}
+{% load static %}
+
+{% block title %}
+{% if object %}Modifier le Revenu{% else %}Créer un Revenu{% endif %}
+{% endblock %}
+
+{% block content %}
+{% with title=title subtitle="Formulaire de revenu" list_url="finance:revenue_list" %}
+{{ block.super }}
+{% endwith %}
+{% endblock %} 

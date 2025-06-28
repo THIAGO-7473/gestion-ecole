@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Supprimer la Classe{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                        Confirmation de suppression
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <h5><i class="icon fas fa-exclamation-triangle"></i> Attention !</h5>
+                        Vous êtes sur le point de supprimer la classe "{{ object.nom }}". Cette action est irréversible.
+                        <br>
+                        <strong>Cette suppression affectera :</strong>
+                        <ul>
+                            <li>Tous les élèves inscrits dans cette classe</li>
+                            <li>Tous les cours associés à cette classe</li>
+                            <li>Toutes les notes et évaluations liées à cette classe</li>
+                        </ul>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group text-right">
+                            <a href="{% url 'administrative:classe_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Confirmer la suppression
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

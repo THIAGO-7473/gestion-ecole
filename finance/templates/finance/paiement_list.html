@@ -1,0 +1,15 @@
+{% extends 'finance/base_list.html' %}
+{% load static %}
+{% load finance_extras %}
+
+{% block title %}Liste des Paiements{% endblock %}
+
+{% block content %}
+{% with title="Liste des Paiements" subtitle="Gestion des paiements" create_url="finance:paiement_create" detail_url="finance:paiement_detail" update_url="finance:paiement_update" delete_url="finance:paiement_delete" %}
+{% with headers="Date,Montant,Mode de paiement,Facture,Élève,Remarques,Actions"|split:"," %}
+{% with fields="date,montant,mode_paiement,facture,eleve,remarques"|split:"," %}
+{{ block.super }}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endblock %} 

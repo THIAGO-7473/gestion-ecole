@@ -1,0 +1,15 @@
+{% extends 'finance/base_list.html' %}
+{% load static %}
+{% load finance_extras %}
+
+{% block title %}Liste des Revenus{% endblock %}
+
+{% block content %}
+{% with title="Liste des Revenus" subtitle="Gestion des revenus" create_url="finance:revenue_create" detail_url="finance:revenue_detail" update_url="finance:revenue_update" delete_url="finance:revenue_delete" %}
+{% with headers="Intitulé,Description,Montant,Date de réception,Moyen de paiement,Personne payeur,Statut,Date de validation,Actions"|split:"," %}
+{% with fields="intitule,description,montant,date_reception,moyen_paiement,personne_payeur,statut,date_validation"|split:"," %}
+{{ block.super }}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endblock %} 

@@ -1,0 +1,12 @@
+{% extends 'finance/base_confirm_delete.html' %}
+{% load static %}
+
+{% block title %}Supprimer le Budget{% endblock %}
+
+{% block content %}
+{% with title="Supprimer le Budget" subtitle="Confirmation de suppression" list_url="finance:budget_list" %}
+{% with fields=object.get_fields %}
+{{ block.super }}
+{% endwith %}
+{% endwith %}
+{% endblock %} 

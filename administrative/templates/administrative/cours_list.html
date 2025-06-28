@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Liste des Cours{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-chalkboard-teacher"></i> Liste des Cours
+            </h5>
+            <a href="{% url 'administrative:cours_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouveau Cours
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Matière</th>
+                            <th>Coefficient</th>
+                            <th>Enseignant</th>
+                            <th>Classe</th>
+                            <th>Salle</th>
+                            <th>Emploi du Temps</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cours in cours %}
+                        <tr>
+                            <td>{{ cours.nom }}</td>
+                            <td>{{ cours.matiere }}</td>
+                            <td>{{ cours.coefficient }}</td>
+                            <td>{{ cours.enseignant }}</td>
+                            <td>{{ cours.classe }}</td>
+                            <td>{{ cours.salle }}</td>
+                            <td>{{ cours.emploi_du_temps }}</td>
+                            <td>
+                                <a href="{% url 'administrative:cours_update' cours.pk %}" 
+                                   class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'administrative:cours_delete' cours.pk %}" 
+                                   class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center">Aucun cours enregistré</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

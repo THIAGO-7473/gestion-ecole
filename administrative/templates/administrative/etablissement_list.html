@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Liste des Établissements{% endblock %}
+
+{% block content %}
+<style>
+    .logo-thumbnail {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        background-color: #f8f9fa;
+        padding: 2px;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .logo-modal {
+        max-width: 100%;
+        max-height: 80vh;
+        object-fit: contain;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-school"></i> Liste des Établissements
+            </h5>
+            <a href="{% url 'administrative:etablissement_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouvel Établissement
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Logo</th>
+                            <th>Nom</th>
+                            <th>Adresse</th>
+                            <th>Téléphone</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for etablissement in etablissements %}
+                        <tr>
+                            <td>
+                                {% if etablissement.logo %}
+                                    <img src="{{ etablissement.logo.url }}" 
+                                         alt="Logo de {{ etablissement.nom }}" 
+                                         class="logo-thumbnail"
+                                         data-bs-toggle="modal" 
+                                         data-bs-target="#logoModal{{ etablissement.pk }}">
+                                {% else %}
+                                    <span class="text-muted">Aucun logo</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ etablissement.nom }}</td>
+                            <td>{{ etablissement.adresse }}</td>
+                            <td>{{ etablissement.telephone }}</td>
+                            <td>{{ etablissement.email }}</td>
+                            <td>
+                                <a href="{% url 'administrative:etablissement_update' etablissement.pk %}" 
+                                   class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'administrative:etablissement_delete' etablissement.pk %}" 
+                                   class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Modal pour l'image agrandie -->
+                        {% if etablissement.logo %}
+                        <div class="modal fade" id="logoModal{{ etablissement.pk }}" tabindex="-1" aria-labelledby="logoModalLabel{{ etablissement.pk }}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="logoModalLabel{{ etablissement.pk }}">Logo de {{ etablissement.nom }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <img src="{{ etablissement.logo.url }}" 
+                                             alt="Logo de {{ etablissement.nom }}" 
+                                             class="logo-modal">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                            <i class="fas fa-times"></i> Fermer
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">Aucun établissement enregistré</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ajout des scripts Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %} 

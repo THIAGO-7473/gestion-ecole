@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Détail du Rapport Administratif{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-file-alt"></i> Détail du Rapport Administratif
+            </h5>
+            <a href="{% url 'administrative:rapport_update' rapport.pk %}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Modifier
+            </a>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">Année scolaire</dt>
+                <dd class="col-sm-8">{{ rapport.annee_scolaire }}</dd>
+                <dt class="col-sm-4">Nombre total d'élèves</dt>
+                <dd class="col-sm-8">{{ rapport.nombre_eleves_total }}</dd>
+                <dt class="col-sm-4">Nombre d'élèves nouveaux</dt>
+                <dd class="col-sm-8">{{ rapport.nombre_eleves_nouveaux }}</dd>
+                <dt class="col-sm-4">Nombre d'élèves exclus</dt>
+                <dd class="col-sm-8">{{ rapport.nombre_eleves_exclus }}</dd>
+                <dt class="col-sm-4">Nombre d'enseignants</dt>
+                <dd class="col-sm-8">{{ rapport.nombre_enseignants }}</dd>
+                <dt class="col-sm-4">Nombre de personnel administratif</dt>
+                <dd class="col-sm-8">{{ rapport.nombre_personnel_administratif }}</dd>
+                <dt class="col-sm-4">Événements importants</dt>
+                <dd class="col-sm-8">{{ rapport.evenements_importants }}</dd>
+                <dt class="col-sm-4">Nombre de récompenses</dt>
+                <dd class="col-sm-8">{{ rapport.nombre_recompenses }}</dd>
+                <dt class="col-sm-4">Date de génération</dt>
+                <dd class="col-sm-8">{{ rapport.date_generation|date:"d/m/Y" }}</dd>
+                <dt class="col-sm-4">Responsable validation</dt>
+                <dd class="col-sm-8">{{ rapport.responsable_validation.get_full_name|default:"-" }}</dd>
+                <dt class="col-sm-4">Statut</dt>
+                <dd class="col-sm-8">{{ rapport.get_statut_display }}</dd>
+                <dt class="col-sm-4">Observation</dt>
+                <dd class="col-sm-8">{{ rapport.observation }}</dd>
+                <dt class="col-sm-4">Document PDF</dt>
+                <dd class="col-sm-8">
+                    {% if rapport.document_pdf %}
+                        <a href="{{ rapport.document_pdf.url }}" target="_blank" class="btn btn-sm btn-primary">Télécharger PDF</a>
+                    {% else %}-{% endif %}
+                </dd>
+                <dt class="col-sm-4">Documents supplémentaires</dt>
+                <dd class="col-sm-8">
+                    {% for doc in rapport.documents.all %}
+                        <a href="{{ doc.fichier.url }}" target="_blank" class="btn btn-sm btn-info mb-1">{{ doc.nom }}</a><br>
+                    {% empty %}-{% endfor %}
+                </dd>
+            </dl>
+            <a href="{% url 'administrative:rapport_list' %}" class="btn btn-secondary mt-3">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Détails de la Participation{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-user-graduate"></i> Détails de la Participation
+            </h5>
+            <div>
+                <a href="{% url 'administrative:participation_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour à la liste
+                </a>
+                <a href="{% url 'administrative:participation_update' participation.pk %}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Modifier
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h6 class="mb-0">Informations de Base</h6>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row mb-0">
+                                <dt class="col-sm-4">Formation</dt>
+                                <dd class="col-sm-8">{{ participation.formation.intitule }}</dd>
+
+                                <dt class="col-sm-4">Participant</dt>
+                                <dd class="col-sm-8">
+                                    {% if participation.enseignant %}
+                                        {{ participation.enseignant.get_full_name }}
+                                    {% else %}
+                                        {{ participation.personnel.get_full_name }}
+                                    {% endif %}
+                                </dd>
+
+                                <dt class="col-sm-4">Statut</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge {% if participation.statut_participation == 'present' %}bg-success
+                                                      {% elif participation.statut_participation == 'absent' %}bg-danger
+                                                      {% elif participation.statut_participation == 'abandon' %}bg-warning
+                                                      {% else %}bg-info{% endif %}">
+                                        {{ participation.get_statut_participation_display }}
+                                    </span>
+                                </dd>
+
+                                <dt class="col-sm-4">Date de Création</dt>
+                                <dd class="col-sm-8">{{ participation.created_at|date:"d/m/Y" }}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h6 class="mb-0">Évaluations</h6>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row mb-0">
+                                <dt class="col-sm-4">Évaluation Formateur</dt>
+                                <dd class="col-sm-8">{{ participation.evaluation_formateur|default:"Non évalué" }}</dd>
+
+                                <dt class="col-sm-4">Évaluation Formation</dt>
+                                <dd class="col-sm-8">{{ participation.evaluation_formation|default:"Non évalué" }}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Attestations</h6>
+                </div>
+                <div class="card-body">
+                    {% if participation.attestations.all %}
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th>Date d'Upload</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for attestation in participation.attestations.all %}
+                                        <tr>
+                                            <td>{{ attestation.nom }}</td>
+                                            <td>{{ attestation.date_upload|date:"d/m/Y H:i" }}</td>
+                                            <td>
+                                                <a href="{{ attestation.fichier.url }}" class="btn btn-sm btn-primary" target="_blank">
+                                                    <i class="fas fa-download"></i> Télécharger
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">Aucune attestation disponible</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

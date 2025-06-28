@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Liste des Tuteurs{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-user-friends"></i> Liste des Tuteurs
+                    </h3>
+                    <div class="card-tools">
+                        <a href="{% url 'staff:tuteur_create' %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Ajouter un Tuteur
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Postnom</th>
+                                    <th>Prénom</th>
+                                    <th>Contact</th>
+                                    <th>Email</th>
+                                    <th>Profession</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for tuteur in object_list %}
+                                <tr>
+                                    <td>{{ tuteur.nom }}</td>
+                                    <td>{{ tuteur.postnom }}</td>
+                                    <td>{{ tuteur.prenom }}</td>
+                                    <td>{{ tuteur.contact_tuteur }}</td>
+                                    <td>{{ tuteur.email|default:"-" }}</td>
+                                    <td>{{ tuteur.profession|default:"-" }}</td>
+                                    <td>
+                                        <a href="{% url 'staff:tuteur_update' tuteur.pk %}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{% url 'staff:tuteur_delete' tuteur.pk %}" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" class="text-center">Aucun tuteur trouvé</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

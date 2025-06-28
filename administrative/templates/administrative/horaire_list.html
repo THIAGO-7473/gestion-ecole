@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Liste des Horaires de Cours{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-clock"></i> Liste des Horaires de Cours
+            </h5>
+            <a href="{% url 'administrative:horaire_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouvel Horaire
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Cours</th>
+                            <th>Emploi du Temps</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for horaire in horaires %}
+                        <tr>
+                            <td>{{ horaire.cours }}</td>
+                            <td>{{ horaire.emploi_du_temps }}</td>
+                            <td>
+                                <a href="{% url 'administrative:horaire_update' horaire.pk %}" 
+                                   class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'administrative:horaire_delete' horaire.pk %}" 
+                                   class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center">Aucun horaire de cours enregistré</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

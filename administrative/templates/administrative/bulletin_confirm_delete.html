@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load administrative_extras %}
+
+{% block title %}Supprimer Bulletin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0">Confirmer la suppression</h4>
+        </div>
+        <div class="card-body">
+            <p class="lead">Êtes-vous sûr de vouloir supprimer le bulletin suivant ?</p>
+            
+            <div class="alert alert-warning">
+                <strong>Élève :</strong> {{ bulletin.eleve }}<br>
+                <strong>Classe :</strong> {{ bulletin.classe|default:"-" }}<br>
+                <strong>Année Scolaire :</strong> {{ bulletin.annee_scolaire }}<br>
+                <strong>Période :</strong> {{ bulletin.periode|get_periode_display }}<br>
+                <strong>Moyenne Générale :</strong> {{ bulletin.moyenne_generale }}<br>
+                <strong>Rang :</strong> {{ bulletin.rang }}<br>
+                <strong>Date d'édition :</strong> {{ bulletin.date_edition|date:"d/m/Y" }}
+            </div>
+
+            <p class="text-danger">
+                <i class="fas fa-exclamation-triangle"></i>
+                Cette action est irréversible et supprimera définitivement le bulletin.
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Confirmer la suppression
+                    </button>
+                    <a href="{% url 'administrative:bulletin_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

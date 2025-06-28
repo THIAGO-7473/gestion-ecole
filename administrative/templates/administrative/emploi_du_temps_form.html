@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if object %}Modifier Emploi du Temps{% else %}Nouvel Emploi du Temps{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-calendar-week"></i>
+                        {% if object %}Modifier Emploi du Temps{% else %}Nouvel Emploi du Temps{% endif %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.jour.id_for_label }}">Jour</label>
+                                    {{ form.jour }}
+                                    {% if form.jour.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.jour.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.heure_debut.id_for_label }}">Heure de début</label>
+                                    {{ form.heure_debut }}
+                                    {% if form.heure_debut.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.heure_debut.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="{{ form.heure_fin.id_for_label }}">Heure de fin</label>
+                                    {{ form.heure_fin }}
+                                    {% if form.heure_fin.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.heure_fin.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group text-right">
+                            <a href="{% url 'administrative:emploi_du_temps_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Enregistrer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

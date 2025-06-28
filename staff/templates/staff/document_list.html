@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Documents du Personnel{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Documents du Personnel</h1>
+        <a href="{% url 'staff:document_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nouveau Document
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Type</th>
+                    <th>Date de dépôt</th>
+                    <th>Enseignant</th>
+                    <th>Personnel</th>
+                    <th>Statut</th>
+                    <th>Fichiers</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for document in documents %}
+                <tr>
+                    <td>{{ document.titre }}</td>
+                    <td>{{ document.get_type_document_display }}</td>
+                    <td>{{ document.date_depot|date:"d/m/Y" }}</td>
+                    <td>{{ document.enseignant|default:"-" }}</td>
+                    <td>{{ document.personnel|default:"-" }}</td>
+                    <td>
+                        <span class="badge {% if document.statut == 'valide' %}bg-success
+                                         {% elif document.statut == 'rejete' %}bg-danger
+                                         {% elif document.statut == 'expire' %}bg-warning
+                                         {% else %}bg-secondary{% endif %}">
+                            {{ document.get_statut_display }}
+                        </span>
+                    </td>
+                    <td>
+                        {% for fichier in document.fichiers.all %}
+                        <a href="{{ fichier.fichier.url }}" class="btn btn-sm btn-info mb-1" target="_blank" title="{{ fichier.nom_fichier }}">
+                            <i class="fas fa-download"></i> Fichier {{ forloop.counter }}
+                        </a>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a href="{% url 'staff:document_update' document.pk %}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'staff:document_delete' document.pk %}" class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center">Aucun document trouvé</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Précédent</a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Suivant</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %} 

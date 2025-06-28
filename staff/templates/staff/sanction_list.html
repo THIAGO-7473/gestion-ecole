@@ -1,0 +1,468 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Liste des Sanctions{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-exclamation-triangle"></i> Liste des Sanctions
+                    </h3>
+                    <div class="card-tools">
+                        <a href="{% url 'staff:sanction_create' %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Ajouter une Sanction
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Enseignant</th>
+                                    <th>Personnel Administratif</th>
+                                    <th>Type de sanction</th>
+                                    <th>Référence</th>
+                                    <th>Date de sanction</th>
+                                    <th>Date d'effet</th>
+                                    <th>Motif</th>
+                                    <th>Durée</th>
+                                    <th>Montant</th>
+                                    <th>Donneur de sanction</th>
+                                    <th>Statut</th>
+                                    <th>Date de validation</th>
+                                    <th>Observations</th>
+                                    <th>Preuves</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sanction in object_list %}
+                                <tr>
+                                    <td>
+                                        {% if sanction.enseignant %}
+                                            <span class="badge badge-light">
+                                                {{ sanction.enseignant.get_full_name }}
+                                            </span>
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if sanction.personnel %}
+                                            <span class="badge badge-light">
+                                                {{ sanction.personnel.get_full_name }}
+                                            </span>
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-light">
+                                            {{ sanction.get_type_sanction_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-primary">
+                                            {{ sanction.reference }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-light">
+                                            {{ sanction.date_sanction|date:"d/m/Y" }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-light">
+                                            {{ sanction.date_effet|date:"d/m/Y" }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-light">
+                                            {{ sanction.motif|truncatechars:50 }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if sanction.duree %}
+                                            <span class="badge badge-info">
+                                                {{ sanction.duree }} {{ sanction.get_duree_unite_display }}
+                                            </span>
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if sanction.montant_retenue %}
+                                            <span class="badge badge-warning">
+                                                {{ sanction.montant_retenue }} {{ sanction.get_devise_display }}
+                                            </span>
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if sanction.donneur_sanction %}
+                                            <span class="badge {% if sanction.donneur_sanction == 'prefet_etudes' %}badge-primary
+                                                {% elif sanction.donneur_sanction == 'secretaire' %}badge-info
+                                                {% elif sanction.donneur_sanction == 'promoteur' %}badge-success
+                                                {% else %}badge-warning{% endif %}">
+                                                {{ sanction.get_donneur_sanction_display }}
+                                            </span>
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if sanction.statut == 'en_attente' %}
+                                            <span class="badge badge-warning">
+                                                <i class="fas fa-clock"></i> En attente
+                                            </span>
+                                        {% elif sanction.statut == 'appliquee' %}
+                                            <span class="badge badge-success">
+                                                <i class="fas fa-check"></i> Appliquée
+                                            </span>
+                                        {% elif sanction.statut == 'annulee' %}
+                                            <span class="badge badge-danger">
+                                                <i class="fas fa-times"></i> Annulée
+                                            </span>
+                                        {% elif sanction.statut == 'contestee' %}
+                                            <span class="badge badge-info">
+                                                <i class="fas fa-exclamation-circle"></i> Contestée
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if sanction.date_validation %}
+                                            <span class="badge badge-light">
+                                                {{ sanction.date_validation|date:"d/m/Y" }}
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-light">
+                                                Non validée
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if sanction.observations %}
+                                            <span class="badge badge-light">
+                                                {{ sanction.observations|truncatechars:50 }}
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-light">
+                                                Aucune observation
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if sanction.fichiers_preuves.all %}
+                                            <div class="btn-group">
+                                                {% for fichier in sanction.fichiers_preuves.all %}
+                                                    <a href="{{ fichier.fichier.url }}" class="btn btn-info btn-sm" target="_blank" title="{{ fichier.description|default:fichier.fichier.name|cut:'sanctions/preuves/' }}">
+                                                        <i class="fas fa-file-alt"></i>
+                                                    </a>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            <span class="badge badge-warning">
+                                                Aucune preuve
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a href="{% url 'staff:sanction_detail' sanction.pk %}" class="btn btn-info btn-sm" title="Détails">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{% url 'staff:sanction_update' sanction.pk %}" class="btn btn-warning btn-sm" title="Modifier">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'staff:sanction_delete' sanction.pk %}" class="btn btn-danger btn-sm" title="Supprimer">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="14" class="text-center">
+                                        <span class="badge badge-warning">Aucune sanction trouvée</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Styles de base pour tous les badges */
+.badge {
+    font-size: 0.9em;
+    padding: 8px;
+    white-space: normal;
+    text-align: left;
+    display: inline-block;
+    line-height: 1.2;
+    margin: 2px 0;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.badge i {
+    margin-right: 5px;
+}
+
+/* Couleurs standards */
+.badge.badge-primary {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.badge.badge-secondary {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.badge.badge-success {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.badge.badge-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.badge.badge-warning {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.badge.badge-info {
+    background-color: #17a2b8;
+    color: #fff;
+}
+
+.badge.badge-light {
+    background-color: #f8f9fa;
+    color: #000;
+    border: 1px solid #ddd;
+}
+
+.badge.badge-dark {
+    background-color: #343a40;
+    color: #fff;
+}
+
+/* Variantes pastel */
+.badge.badge-primary-light {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+.badge.badge-secondary-light {
+    background-color: #e2e3e5;
+    color: #383d41;
+}
+
+.badge.badge-success-light {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.badge.badge-danger-light {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.badge.badge-warning-light {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.badge.badge-info-light {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+/* Variantes foncées */
+.badge.badge-primary-dark {
+    background-color: #004085;
+    color: #fff;
+}
+
+.badge.badge-secondary-dark {
+    background-color: #383d41;
+    color: #fff;
+}
+
+.badge.badge-success-dark {
+    background-color: #155724;
+    color: #fff;
+}
+
+.badge.badge-danger-dark {
+    background-color: #721c24;
+    color: #fff;
+}
+
+.badge.badge-warning-dark {
+    background-color: #856404;
+    color: #fff;
+}
+
+.badge.badge-info-dark {
+    background-color: #0c5460;
+    color: #fff;
+}
+
+/* Badges avec bordures */
+.badge.badge-outline-primary {
+    background-color: transparent;
+    border: 1px solid #007bff;
+    color: #007bff;
+}
+
+.badge.badge-outline-secondary {
+    background-color: transparent;
+    border: 1px solid #6c757d;
+    color: #6c757d;
+}
+
+.badge.badge-outline-success {
+    background-color: transparent;
+    border: 1px solid #28a745;
+    color: #28a745;
+}
+
+.badge.badge-outline-danger {
+    background-color: transparent;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+}
+
+.badge.badge-outline-warning {
+    background-color: transparent;
+    border: 1px solid #ffc107;
+    color: #ffc107;
+}
+
+.badge.badge-outline-info {
+    background-color: transparent;
+    border: 1px solid #17a2b8;
+    color: #17a2b8;
+}
+
+/* Badges avec dégradés */
+.badge.badge-gradient-primary {
+    background: linear-gradient(45deg, #007bff, #00bfff);
+    color: #fff;
+}
+
+.badge.badge-gradient-success {
+    background: linear-gradient(45deg, #28a745, #5cb85c);
+    color: #fff;
+}
+
+.badge.badge-gradient-danger {
+    background: linear-gradient(45deg, #dc3545, #ff5555);
+    color: #fff;
+}
+
+.badge.badge-gradient-warning {
+    background: linear-gradient(45deg, #ffc107, #ffdb4a);
+    color: #000;
+}
+
+.badge.badge-gradient-info {
+    background: linear-gradient(45deg, #17a2b8, #5bc0de);
+    color: #fff;
+}
+
+/* États spéciaux */
+.badge.badge-active {
+    background-color: #28a745;
+    color: #fff;
+    box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
+}
+
+.badge.badge-inactive {
+    background-color: #6c757d;
+    color: #fff;
+    opacity: 0.7;
+}
+
+.badge.badge-pending {
+    background-color: #ffc107;
+    color: #000;
+    animation: pulse 2s infinite;
+}
+
+/* Effets au survol */
+.badge:hover {
+    opacity: 0.9;
+    transition: all 0.3s ease;
+}
+
+/* Animation pour les badges en attente */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 5px rgba(255, 193, 7, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+    }
+}
+
+/* Styles pour les groupes de badges */
+.badge-group {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+/* Styles pour les badges avec icônes */
+.badge i {
+    margin-right: 5px;
+}
+
+.badge.badge-icon-only {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+/* Styles pour le tableau */
+.table td {
+    vertical-align: middle;
+}
+
+.btn-group {
+    display: flex;
+    gap: 5px;
+}
+
+/* Styles responsifs */
+@media (max-width: 768px) {
+    .badge {
+        font-size: 0.8em;
+        padding: 6px;
+    }
+}
+</style>
+{% endblock %} 

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Liste des Rapports Administratifs{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-file-alt"></i> Liste des Rapports Administratifs
+            </h5>
+            <a href="{% url 'administrative:rapport_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouveau Rapport
+            </a>
+        </div>
+        <div class="card-body">
+            {% if rapports %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Année scolaire</th>
+                            <th>Élèves total</th>
+                            <th>Élèves nouveaux</th>
+                            <th>Élèves exclus</th>
+                            <th>Enseignants</th>
+                            <th>Personnel administratif</th>
+                            <th>Événements importants</th>
+                            <th>Récompenses</th>
+                            <th>Date génération</th>
+                            <th>Responsable validation</th>
+                            <th>Statut</th>
+                            <th>Observation</th>
+                            <th>Document PDF</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rapport in rapports %}
+                        <tr>
+                            <td>{{ rapport.id }}</td>
+                            <td>{{ rapport.annee_scolaire }}</td>
+                            <td>{{ rapport.nombre_eleves_total }}</td>
+                            <td>{{ rapport.nombre_eleves_nouveaux }}</td>
+                            <td>{{ rapport.nombre_eleves_exclus }}</td>
+                            <td>{{ rapport.nombre_enseignants }}</td>
+                            <td>{{ rapport.nombre_personnel_administratif }}</td>
+                            <td>{{ rapport.evenements_importants|truncatechars:30 }}</td>
+                            <td>{{ rapport.nombre_recompenses }}</td>
+                            <td>{{ rapport.date_generation|date:"d/m/Y" }}</td>
+                            <td>{{ rapport.responsable_validation.get_full_name|default:"-" }}</td>
+                            <td>
+                                <span class="badge {% if rapport.statut == 'valide' %}bg-success
+                                                  {% elif rapport.statut == 'refuse' %}bg-danger
+                                                  {% else %}bg-warning{% endif %}">
+                                    {{ rapport.get_statut_display }}
+                                </span>
+                            </td>
+                            <td>{{ rapport.observation|truncatechars:30 }}</td>
+                            <td>
+                                {% if rapport.document_pdf %}
+                                    <a href="{{ rapport.document_pdf.url }}" target="_blank" class="btn btn-sm btn-primary">PDF</a>
+                                {% else %}-{% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'administrative:rapport_detail' rapport.pk %}" class="btn btn-info btn-sm" title="Détail">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'administrative:rapport_update' rapport.pk %}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'administrative:rapport_delete' rapport.pk %}" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> Aucun rapport administratif enregistré pour le moment.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

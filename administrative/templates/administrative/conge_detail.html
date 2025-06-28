@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Détails du Congé{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-calendar-alt"></i> Détails du Congé
+            </h5>
+            <div>
+                <a href="{% url 'administrative:conge_update' conge.pk %}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Modifier
+                </a>
+                <a href="{% url 'administrative:conge_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6 class="mb-3">Informations Générales</h6>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th style="width: 40%">Personnel</th>
+                            <td>
+                                {% if conge.personnel %}
+                                    {{ conge.personnel }}
+                                {% else %}
+                                    {{ conge.enseignant }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Type de Congé</th>
+                            <td>{{ conge.get_type_conge_display }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date de Début</th>
+                            <td>{{ conge.date_debut|date:"d/m/Y" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date de Fin</th>
+                            <td>{{ conge.date_fin|date:"d/m/Y" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Jours Ouvrables</th>
+                            <td>{{ conge.jours_ouvrables }}</td>
+                        </tr>
+                        <tr>
+                            <th>Statut</th>
+                            <td>
+                                <span class="badge {% if conge.statut == 'approuve' %}bg-success
+                                                  {% elif conge.statut == 'rejete' %}bg-danger
+                                                  {% elif conge.statut == 'annule' %}bg-secondary
+                                                  {% else %}bg-warning{% endif %}">
+                                    {{ conge.get_statut_display }}
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="mb-3">Détails Supplémentaires</h6>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th style="width: 40%">Motif</th>
+                            <td>{{ conge.motif|default:"-" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Approuvé par</th>
+                            <td>{{ conge.approuve_par|default:"-" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date d'approbation</th>
+                            <td>{{ conge.date_approbation|date:"d/m/Y"|default:"-" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date de création</th>
+                            <td>{{ conge.created_at|date:"d/m/Y H:i" }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            {% if conge.documents.all %}
+            <div class="mt-4">
+                <h6 class="mb-3">Documents Justificatifs</h6>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nom du fichier</th>
+                                <th>Date d'upload</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for doc in conge.documents.all %}
+                            <tr>
+                                <td>{{ doc.nom }}</td>
+                                <td>{{ doc.date_upload|date:"d/m/Y H:i" }}</td>
+                                <td>
+                                    <a href="{{ doc.fichier.url }}" target="_blank" class="btn btn-info btn-sm">
+                                        <i class="fas fa-file-pdf"></i> Voir
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

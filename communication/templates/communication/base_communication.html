@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="{% url 'communication:new_message' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'new_message' %}active{% endif %}">
+                    <i class="fas fa-pen"></i> Nouveau message
+                </a>
+                <a href="{% url 'communication:inbox' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'inbox' %}active{% endif %}">
+                    <i class="fas fa-inbox"></i> Boîte de réception
+                </a>
+                <a href="{% url 'communication:sent_messages' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'sent_messages' %}active{% endif %}">
+                    <i class="fas fa-paper-plane"></i> Messages envoyés
+                </a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            {% block communication_content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

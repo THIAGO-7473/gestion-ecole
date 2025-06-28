@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Détails du Paiement{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Détails du Paiement</h1>
+        <div>
+            <a href="{% url 'finance:paiement_update' object.pk %}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Modifier
+            </a>
+            <a href="{% url 'finance:paiement_delete' object.pk %}" class="btn btn-danger">
+                <i class="fas fa-trash"></i> Supprimer
+            </a>
+            <a href="{% url 'finance:paiement_list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Informations du Paiement</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th style="width: 30%">Date</th>
+                            <td>{{ object.date|date:"d/m/Y" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Montant</th>
+                            <td>{{ object.montant|floatformat:2 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Mode de paiement</th>
+                            <td>{{ object.get_mode_paiement_display }}</td>
+                        </tr>
+                        <tr>
+                            <th>Remarques</th>
+                            <td>{{ object.remarques|default:"-" }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Informations de la Facture</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th style="width: 30%">Référence</th>
+                            <td>{{ object.facture.reference }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date d'émission</th>
+                            <td>{{ object.facture.date_emission|date:"d/m/Y" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date d'échéance</th>
+                            <td>{{ object.facture.date_echeance|date:"d/m/Y"|default:"-" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Montant total</th>
+                            <td>{{ object.facture.montant|floatformat:2 }} {{ object.facture.devise }}</td>
+                        </tr>
+                        <tr>
+                            <th>Statut</th>
+                            <td>{{ object.facture.get_statut_display }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Informations de l'Élève</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th style="width: 30%">Nom complet</th>
+                            <td>{{ object.eleve.nom_complet }}</td>
+                        </tr>
+                        <tr>
+                            <th>Classe</th>
+                            <td>{{ object.eleve.classe.nom }}</td>
+                        </tr>
+                        <tr>
+                            <th>Niveau</th>
+                            <td>{{ object.eleve.classe.niveau }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

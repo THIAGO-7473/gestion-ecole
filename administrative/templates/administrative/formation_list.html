@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Liste des Formations{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-graduation-cap"></i> Liste des Formations
+            </h5>
+            <a href="{% url 'administrative:formation_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouvelle Formation
+            </a>
+        </div>
+        <div class="card-body">
+            {% if formations %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Intitulé</th>
+                            <th>Type de Formation</th>
+                            <th>Date Début</th>
+                            <th>Date Fin</th>
+                            <th>Lieu de la formation</th>
+                            <th>Formateur</th>
+                            <th>Organisateur</th>
+                            <th>Coût</th>
+                            <th>Statut</th>
+                            <th>Description</th>
+                            <th>Objectifs</th>
+                            <th>Date Création</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for formation in formations %}
+                        <tr>
+                            <td>{{ formation.intitule }}</td>
+                            <td>{{ formation.get_type_formation_display }}</td>
+                            <td>{{ formation.date_debut|date:"d/m/Y" }}</td>
+                            <td>{{ formation.date_fin|date:"d/m/Y" }}</td>
+                            <td>{{ formation.lieu }}</td>
+                            <td>{{ formation.formateur|default:"-" }}</td>
+                            <td>{{ formation.organisateur|default:"-" }}</td>
+                            <td>
+                                {% if formation.cout %}
+                                    {{ formation.cout }} {{ formation.devise }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge {% if formation.statut == 'realise' %}bg-success
+                                                  {% elif formation.statut == 'annule' %}bg-danger
+                                                  {% else %}bg-warning{% endif %}">
+                                    {{ formation.get_statut_display }}
+                                </span>
+                            </td>
+                            <td>{{ formation.description|truncatechars:50|default:"-" }}</td>
+                            <td>{{ formation.objectifs|truncatechars:50|default:"-" }}</td>
+                            <td>{{ formation.created_at|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                <a href="{% url 'administrative:formation_detail' formation.pk %}" 
+                                   class="btn btn-info btn-sm">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'administrative:formation_update' formation.pk %}" 
+                                   class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'administrative:formation_delete' formation.pk %}" 
+                                   class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> Aucune formation enregistrée pour le moment.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

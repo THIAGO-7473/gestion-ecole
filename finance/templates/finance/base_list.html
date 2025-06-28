@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load finance_extras %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">{{ title }}</h1>
+        <a href="{% url create_url %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Ajouter
+        </a>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">{{ subtitle }}</h6>
+        </div>
+        <div class="card-body">
+            <form method="get" class="mb-4">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="eleve">Élève</label>
+                            <select name="eleve" id="eleve" class="form-control">
+                                <option value="">Tous les élèves</option>
+                                {% for eleve in eleves %}
+                                <option value="{{ eleve.id }}" {% if request.GET.eleve == eleve.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ eleve.nom_complet }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="facture">Facture</label>
+                            <select name="facture" id="facture" class="form-control">
+                                <option value="">Toutes les factures</option>
+                                {% for facture in factures %}
+                                <option value="{{ facture.id }}" {% if request.GET.facture == facture.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ facture.reference }} - {{ facture.montant }} {{ facture.devise }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="date">Date</label>
+                            <input type="date" name="date" id="date" class="form-control" 
+                                   value="{{ request.GET.date }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12 text-right">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Rechercher
+                        </button>
+                        <a href="{% url 'finance:paiement_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-undo"></i> Réinitialiser
+                        </a>
+                    </div>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Élève</th>
+                            <th>Facture</th>
+                            <th>Montant</th>
+                            <th>Mode de paiement</th>
+                            <th>Remarques</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for object in object_list %}
+                        <tr>
+                            <td>{{ object.date|date:"d/m/Y" }}</td>
+                            <td>
+                                {% if object.eleve %}
+                                    {{ object.eleve.nom_complet }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if object.facture %}
+                                    {{ object.facture.reference }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>{{ object.montant|floatformat:2 }} {{ object.devise }}</td>
+                            <td>{{ object.get_mode_paiement_display }}</td>
+                            <td>
+                                {% if object.remarques %}
+                                    {{ object.remarques }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url detail_url object.pk %}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url update_url object.pk %}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url delete_url object.pk %}" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center">Aucun élément trouvé</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/French.json"
+            }
+        });
+    });
+</script>
+{% endblock %} 

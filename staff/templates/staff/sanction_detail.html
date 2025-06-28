@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Détails de la sanction{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Détails de la sanction
+                    </h3>
+                    <div class="card-tools">
+                        <a href="{% url 'staff:sanction_list' %}" class="btn btn-light btn-sm">
+                            <i class="fas fa-arrow-left"></i> Retour à la liste
+                        </a>
+                        <a href="{% url 'staff:sanction_update' object.pk %}" class="btn btn-light btn-sm">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">Informations de base</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Type de sanction:</strong> {{ object.get_type_sanction_display }}</li>
+                                        <li><strong>Date de sanction:</strong> {{ object.date_sanction|date:"d/m/Y" }}</li>
+                                        <li><strong>Date d'effet:</strong> {{ object.date_effet|date:"d/m/Y" }}</li>
+                                        <li><strong>Date de validation:</strong> {{ object.date_validation|date:"d/m/Y" }}</li>
+                                        <li><strong>Statut:</strong> 
+                                            <span class="badge {% if object.statut == 'en_attente' %}bg-warning
+                                                            {% elif object.statut == 'validee' %}bg-success
+                                                            {% elif object.statut == 'rejetee' %}bg-danger
+                                                            {% else %}bg-secondary{% endif %}">
+                                                {{ object.get_statut_display }}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">Détails financiers</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Durée:</strong> {{ object.duree }} {{ object.get_duree_unite_display }}</li>
+                                        <li><strong>Montant retenu:</strong> {{ object.montant_retenue }} {{ object.get_devise_display }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card mb-4">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">Informations supplémentaires</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Motif:</strong> {{ object.motif }}</li>
+                                        <li><strong>Observations:</strong> {{ object.observations|default:"Aucune observation" }}</li>
+                                        <li><strong>Donneur de sanction:</strong> {{ object.donneur_sanction }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if fichiers_existants %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header bg-info text-white">
+                                    <h5 class="mb-0">Fichiers de preuves</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        {% for fichier in fichiers_existants %}
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <i class="fas fa-file-alt"></i>
+                                                    {{ fichier.fichier.name|cut:"sanctions/preuves/" }}
+                                                    {% if fichier.description %}
+                                                        <small class="text-muted">({{ fichier.description }})</small>
+                                                    {% endif %}
+                                                </div>
+                                                <a href="{{ fichier.fichier.url }}" target="_blank" class="btn btn-sm btn-info">
+                                                    <i class="fas fa-eye"></i> Voir
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Détails de la Classe</h3>
+                    <div class="card-tools">
+                        <a href="{% url 'administrative:classe_update' classe.pk %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                        <a href="{% url 'administrative:classe_list' %}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Retour
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 30%">Nom de la classe</th>
+                                    <td>{{ classe.nom }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Niveau</th>
+                                    <td>{{ classe.get_niveau_display }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Filière</th>
+                                    <td>{{ classe.filiere }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Effectif</th>
+                                    <td>{{ classe.effectif }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Enseignant Principal</th>
+                                    <td>
+                                        {% if classe.enseignant_principal %}
+                                            {{ classe.enseignant_principal }}
+                                        {% else %}
+                                            <span class="text-muted">Non assigné</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

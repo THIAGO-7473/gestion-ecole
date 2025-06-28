@@ -1,0 +1,284 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Liste des Factures{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        border: none;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .card-header {
+        background: linear-gradient(45deg, #4e73df, #224abe);
+        color: white;
+        padding: 1.5rem;
+        border-bottom: none;
+    }
+    .card-header h6 {
+        font-size: 1.2rem;
+        margin: 0;
+    }
+    .table {
+        margin-bottom: 0;
+    }
+    .table th {
+        background-color: #f8f9fc;
+        color: #4e73df;
+        font-weight: 600;
+        border-bottom: 2px solid #e3e6f0;
+        padding: 1rem;
+    }
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #e3e6f0;
+    }
+    .badge {
+        padding: 0.5em 1em;
+        border-radius: 50px;
+        font-weight: 500;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+    }
+    .badge-payee {
+        background: linear-gradient(45deg, #1cc88a, #13855c);
+        color: white;
+        box-shadow: 0 2px 5px rgba(28, 200, 138, 0.3);
+    }
+    .badge-non_payee {
+        background: linear-gradient(45deg, #f6c23e, #dda20a);
+        color: white;
+        box-shadow: 0 2px 5px rgba(246, 194, 62, 0.3);
+    }
+    .badge-partielle {
+        background: linear-gradient(45deg, #36b9cc, #258391);
+        color: white;
+        box-shadow: 0 2px 5px rgba(54, 185, 204, 0.3);
+    }
+    .badge-annulee {
+        background: linear-gradient(45deg, #e74a3b, #be2617);
+        color: white;
+        box-shadow: 0 2px 5px rgba(231, 74, 59, 0.3);
+    }
+    .badge-en_retard {
+        background: linear-gradient(45deg, #e74a3b, #be2617);
+        color: white;
+        box-shadow: 0 2px 5px rgba(231, 74, 59, 0.3);
+        animation: pulse 2s infinite;
+    }
+    .btn-primary {
+        background: linear-gradient(45deg, #4e73df, #224abe);
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(45deg, #224abe, #4e73df);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .btn-info, .btn-warning, .btn-danger {
+        padding: 0.5rem;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 3px;
+        transition: all 0.3s ease;
+    }
+    .btn-info:hover, .btn-warning:hover, .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .btn-info {
+        background: linear-gradient(45deg, #36b9cc, #258391);
+        border: none;
+    }
+    .btn-warning {
+        background: linear-gradient(45deg, #f6c23e, #dda20a);
+        border: none;
+    }
+    .btn-danger {
+        background: linear-gradient(45deg, #e74a3b, #be2617);
+        border: none;
+    }
+    .page-title {
+        color: #4e73df;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+    .table-responsive {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .dataTables_wrapper .dataTables_filter input {
+        border-radius: 50px;
+        padding: 0.5rem 1rem;
+        border: 1px solid #d1d3e2;
+    }
+    .dataTables_wrapper .dataTables_length select {
+        border-radius: 50px;
+        padding: 0.5rem 2rem;
+        border: 1px solid #d1d3e2;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        border-radius: 50px;
+        padding: 0.5rem 1rem;
+        margin: 0 3px;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        background: linear-gradient(45deg, #4e73df, #224abe);
+        border: none;
+        color: white !important;
+    }
+    .montant {
+        font-weight: 600;
+        color: #4e73df;
+    }
+    .date {
+        color: #858796;
+        font-size: 0.9rem;
+    }
+    .reference {
+        font-family: 'Courier New', monospace;
+        color: #5a5c69;
+        font-weight: 600;
+    }
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(231, 74, 59, 0.4);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(231, 74, 59, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(231, 74, 59, 0);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800 page-title">
+            <i class="fas fa-file-invoice-dollar mr-2"></i>Liste des Factures
+        </h1>
+        <a href="{% url 'finance:facture_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus mr-2"></i> Ajouter une Facture
+        </a>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold">
+                <i class="fas fa-list mr-2"></i>Toutes les Factures
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Référence</th>
+                            <th>Type</th>
+                            <th>Élève</th>
+                            <th>Enseignant</th>
+                            <th>Montant</th>
+                            <th>Date d'émission</th>
+                            <th>Date d'échéance</th>
+                            <th>Statut</th>
+                            <th>Créée par</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for facture in object_list %}
+                        <tr>
+                            <td class="reference">{{ facture.reference }}</td>
+                            <td>{{ facture.get_type_display }}</td>
+                            <td>
+                                {% if facture.eleve %}
+                                    {{ facture.eleve.nom_complet }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if facture.enseignant %}
+                                    {{ facture.enseignant.get_full_name }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="montant">{{ facture.montant_with_devise }}</td>
+                            <td class="date">{{ facture.date_emission|date:"d/m/Y" }}</td>
+                            <td class="date">
+                                {% if facture.date_echeance %}
+                                    {{ facture.date_echeance|date:"d/m/Y" }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge badge-{{ facture.statut }}">
+                                    {{ facture.get_statut_display }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if facture.created_by %}
+                                    {{ facture.created_by.username }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'finance:facture_detail' facture.pk %}" class="btn btn-info" title="Voir">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'finance:facture_update' facture.pk %}" class="btn btn-warning" title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'finance:facture_delete' facture.pk %}" class="btn btn-danger" title="Supprimer">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="10" class="text-center">Aucune facture trouvée</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/French.json"
+            },
+            "order": [[5, "desc"]], // Trier par date d'émission par défaut
+            "pageLength": 10,
+            "responsive": true,
+            "columnDefs": [
+                { "orderable": false, "targets": [8, 9] } // Désactiver le tri sur les colonnes Créée par et Actions
+            ]
+        });
+    });
+</script>
+{% endblock %} 

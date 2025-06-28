@@ -1,0 +1,286 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tableau de bord - Personnel{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- En-tête -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Tableau de bord - Personnel</h1>
+        <div class="d-flex gap-2">
+            <a href="{% url 'staff:personnel_create' %}" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Nouveau Personnel
+            </a>
+            <a href="{% url 'staff:enseignant_create' %}" class="btn btn-success">
+                <i class="fas fa-chalkboard-teacher"></i> Nouvel Enseignant
+            </a>
+        </div>
+    </div>
+
+    <!-- Cartes de statistiques -->
+    <div class="row mb-4">
+        <!-- Personnel administratif -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Personnel Administratif</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_personnel }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personnel actif -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Personnel Actif</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ personnel_actif }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-check fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enseignants -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Enseignants</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_enseignants }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-chalkboard-teacher fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enseignants actifs -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Enseignants Actifs</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ enseignants_actifs }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-graduate fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions rapides -->
+    <div class="row">
+        <!-- Personnel administratif -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Gestion du personnel administratif</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a href="{% url 'staff:personnel_list' %}" class="btn btn-primary btn-block">
+                                <i class="fas fa-list"></i> Liste du personnel
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="{% url 'staff:personnel_create' %}" class="btn btn-success btn-block">
+                                <i class="fas fa-user-plus"></i> Ajouter un membre
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="btn-group w-100">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-file-export"></i> Exporter la liste
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'staff:export_personnel' 'csv' %}">CSV</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'staff:export_personnel' 'xls' %}">Excel (XLS)</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'staff:export_personnel' 'xlsx' %}">Excel (XLSX)</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'staff:export_personnel' 'pdf' %}">PDF</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <button type="button" class="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#importModal">
+                                <i class="fas fa-file-import"></i> Importer des données
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enseignants -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Gestion des enseignants</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a href="{% url 'staff:enseignant_list' %}" class="btn btn-primary btn-block">
+                                <i class="fas fa-list"></i> Liste des enseignants
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="{% url 'staff:enseignant_create' %}" class="btn btn-success btn-block">
+                                <i class="fas fa-user-plus"></i> Ajouter un enseignant
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <a href="#" class="btn btn-info btn-block">
+                                <i class="fas fa-file-export"></i> Exporter la liste
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <a href="#" class="btn btn-warning btn-block">
+                                <i class="fas fa-file-import"></i> Importer des données
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dernières activités -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Dernières activités</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                    <th>Utilisateur</th>
+                                    <th>Détails</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for activite in dernieres_activites %}
+                                <tr>
+                                    <td>{{ activite.date }}</td>
+                                    <td>{{ activite.action }}</td>
+                                    <td>{{ activite.utilisateur }}</td>
+                                    <td>{{ activite.details }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">Aucune activité récente</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal d'importation -->
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importModalLabel">Importer des données</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" enctype="multipart/form-data" action="{% url 'staff:import_personnel' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Sélectionner un fichier</label>
+                        <input type="file" class="form-control" id="file" name="file" accept=".csv,.xls,.xlsx" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="format" class="form-label">Format du fichier</label>
+                        <select class="form-select" id="format" name="format" required>
+                            <option value="csv">CSV</option>
+                            <option value="xls">Excel (XLS)</option>
+                            <option value="xlsx">Excel (XLSX)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Importer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .btn-block {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-block:hover {
+        transform: translateY(-1px);
+    }
+    
+    .border-left-primary {
+        border-left: 0.25rem solid #4e73df !important;
+    }
+    
+    .border-left-success {
+        border-left: 0.25rem solid #1cc88a !important;
+    }
+    
+    .border-left-info {
+        border-left: 0.25rem solid #36b9cc !important;
+    }
+    
+    .border-left-warning {
+        border-left: 0.25rem solid #f6c23e !important;
+    }
+</style>
+{% endblock %} 

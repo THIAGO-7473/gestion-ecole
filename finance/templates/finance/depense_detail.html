@@ -1,0 +1,12 @@
+{% extends 'finance/base_detail.html' %}
+{% load static %}
+
+{% block title %}Détails de la Dépense{% endblock %}
+
+{% block content %}
+{% with title="Détails de la Dépense" subtitle="Informations détaillées" update_url="finance:depense_update" delete_url="finance:depense_delete" list_url="finance:depense_list" %}
+{% with fields=object.get_fields %}
+{{ block.super }}
+{% endwith %}
+{% endwith %}
+{% endblock %} 

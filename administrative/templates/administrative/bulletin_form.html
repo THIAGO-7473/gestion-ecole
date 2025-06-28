@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if form.instance.pk %}
+        Modifier le Bulletin
+    {% else %}
+        Nouveau Bulletin
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">
+        {% if form.instance.pk %}
+            Modifier le Bulletin
+        {% else %}
+            Nouveau Bulletin
+        {% endif %}
+    </h2>
+
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.eleve.id_for_label }}" class="form-label">Élève</label>
+                {{ form.eleve }}
+                {% if form.eleve.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.eleve.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.classe.id_for_label }}" class="form-label">Classe</label>
+                {{ form.classe }}
+                {% if form.classe.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.classe.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.annee_scolaire.id_for_label }}" class="form-label">Année Scolaire</label>
+                {{ form.annee_scolaire }}
+                {% if form.annee_scolaire.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.annee_scolaire.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.periode.id_for_label }}" class="form-label">Période</label>
+                {{ form.periode }}
+                {% if form.periode.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.periode.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.moyenne_generale.id_for_label }}" class="form-label">Moyenne Générale</label>
+                {{ form.moyenne_generale }}
+                {% if form.moyenne_generale.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.moyenne_generale.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.rang.id_for_label }}" class="form-label">Rang</label>
+                {{ form.rang }}
+                {% if form.rang.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.rang.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.decision.id_for_label }}" class="form-label">Décision</label>
+                {{ form.decision }}
+                {% if form.decision.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.decision.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.date_edition.id_for_label }}" class="form-label">Date d'Édition</label>
+                {{ form.date_edition }}
+                {% if form.date_edition.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.date_edition.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 mb-3">
+                <label for="{{ form.appreciation_generale.id_for_label }}" class="form-label">Appréciation Générale</label>
+                {{ form.appreciation_generale }}
+                {% if form.appreciation_generale.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.appreciation_generale.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a href="{% url 'administrative:bulletin_list' %}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %} 

@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Détails de la Facture{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        border: none;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        height: 100%;
+    }
+    .card-header {
+        background: linear-gradient(45deg, #4e73df, #224abe);
+        color: white;
+        padding: 1.5rem;
+        border-bottom: none;
+    }
+    .card-header h6 {
+        font-size: 1.2rem;
+        margin: 0;
+    }
+    .info-label {
+        font-weight: 600;
+        color: #4e73df;
+    }
+    .info-value {
+        color: #5a5c69;
+    }
+    .badge {
+        padding: 0.5em 1em;
+        border-radius: 50px;
+        font-weight: 500;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+    }
+    .badge-payee {
+        background: linear-gradient(45deg, #1cc88a, #13855c);
+        color: white;
+        box-shadow: 0 2px 5px rgba(28, 200, 138, 0.3);
+    }
+    .badge-non_payee {
+        background: linear-gradient(45deg, #f6c23e, #dda20a);
+        color: white;
+        box-shadow: 0 2px 5px rgba(246, 194, 62, 0.3);
+    }
+    .badge-partielle {
+        background: linear-gradient(45deg, #36b9cc, #258391);
+        color: white;
+        box-shadow: 0 2px 5px rgba(54, 185, 204, 0.3);
+    }
+    .badge-annulee {
+        background: linear-gradient(45deg, #e74a3b, #be2617);
+        color: white;
+        box-shadow: 0 2px 5px rgba(231, 74, 59, 0.3);
+    }
+    .file-list {
+        list-style: none;
+        padding: 0;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    .file-item {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem;
+        border-bottom: 1px solid #e3e6f0;
+    }
+    .file-item:last-child {
+        border-bottom: none;
+    }
+    .file-icon {
+        margin-right: 1rem;
+        color: #4e73df;
+    }
+    .file-name {
+        flex-grow: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .file-date {
+        color: #858796;
+        font-size: 0.8rem;
+        margin-left: 1rem;
+    }
+    .btn-primary {
+        background: linear-gradient(45deg, #4e73df, #224abe);
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(45deg, #224abe, #4e73df);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .card-body {
+        padding: 1.5rem;
+    }
+    .row-equal-height {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .row-equal-height > [class*='col-'] {
+        display: flex;
+        flex-direction: column;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-file-invoice-dollar mr-2"></i>Détails de la Facture
+        </h1>
+        <div>
+            <a href="{% url 'finance:facture_update' object.pk %}" class="btn btn-warning">
+                <i class="fas fa-edit mr-2"></i> Modifier
+            </a>
+            <a href="{% url 'finance:facture_delete' object.pk %}" class="btn btn-danger">
+                <i class="fas fa-trash mr-2"></i> Supprimer
+            </a>
+            <a href="{% url 'finance:facture_list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left mr-2"></i> Retour
+            </a>
+        </div>
+    </div>
+
+    <div class="row row-equal-height">
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold">
+                        <i class="fas fa-info-circle mr-2"></i>Informations de la Facture
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><span class="info-label">Référence :</span> <span class="info-value">{{ object.reference }}</span></p>
+                            <p><span class="info-label">Type :</span> <span class="info-value">{{ object.get_type_display }}</span></p>
+                            <p><span class="info-label">Montant :</span> <span class="info-value">{{ object.montant_with_devise }}</span></p>
+                            <p><span class="info-label">Statut :</span> <span class="badge badge-{{ object.statut }}">{{ object.get_statut_display }}</span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><span class="info-label">Date d'émission :</span> <span class="info-value">{{ object.date_emission|date:"d/m/Y" }}</span></p>
+                            <p><span class="info-label">Date d'échéance :</span> <span class="info-value">
+                                {% if object.date_echeance %}
+                                    {{ object.date_echeance|date:"d/m/Y" }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </span></p>
+                            <p><span class="info-label">Créée par :</span> <span class="info-value">{{ object.created_by.username }}</span></p>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <p><span class="info-label">Description :</span></p>
+                            <p class="info-value">{{ object.description|default:"-" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold">
+                        <i class="fas fa-paperclip mr-2"></i>Fichiers joints
+                    </h6>
+                </div>
+                <div class="card-body">
+                    {% if object.fichiers.all %}
+                        <ul class="file-list">
+                            {% for fichier in object.fichiers.all %}
+                                <li class="file-item">
+                                    <i class="fas fa-file file-icon"></i>
+                                    <span class="file-name">{{ fichier.fichier.name|cut:"factures/" }}</span>
+                                    <span class="file-date">{{ fichier.date_upload|date:"d/m/Y H:i" }}</span>
+                                    <a href="{{ fichier.fichier.url }}" class="btn btn-sm btn-primary ml-2" target="_blank">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">Aucun fichier joint</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold">
+                        <i class="fas fa-user mr-2"></i>Bénéficiaire
+                    </h6>
+                </div>
+                <div class="card-body">
+                    {% if object.eleve %}
+                        <p><span class="info-label">Élève :</span> <span class="info-value">{{ object.eleve.nom_complet }}</span></p>
+                    {% elif object.enseignant %}
+                        <p><span class="info-label">Enseignant :</span> <span class="info-value">{{ object.enseignant.get_full_name }}</span></p>
+                    {% else %}
+                        <p class="text-muted">Aucun bénéficiaire associé</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

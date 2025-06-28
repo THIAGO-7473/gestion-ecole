@@ -1,0 +1,12 @@
+{% extends 'finance/base_detail.html' %}
+{% load static %}
+
+{% block title %}Détails du Revenu{% endblock %}
+
+{% block content %}
+{% with title="Détails du Revenu" subtitle="Informations détaillées" update_url="finance:revenue_update" delete_url="finance:revenue_delete" list_url="finance:revenue_list" %}
+{% with fields=object.get_fields %}
+{{ block.super }}
+{% endwith %}
+{% endwith %}
+{% endblock %} 

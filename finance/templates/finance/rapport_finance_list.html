@@ -1,0 +1,14 @@
+{% extends 'finance/base_list.html' %}
+{% load static %}
+
+{% block title %}Liste des Rapports Financiers{% endblock %}
+
+{% block content %}
+{% with title="Liste des Rapports Financiers" subtitle="Gestion des rapports financiers" create_url="finance:rapport_finance_create" detail_url="finance:rapport_finance_detail" update_url="finance:rapport_finance_update" delete_url="finance:rapport_finance_delete" %}
+{% with headers="Année scolaire,Total revenus,Total dépenses,Total bourses,Solde final,Date de génération,Responsable validation,Statut,Observation,Actions"|split:"," %}
+{% with fields="annee_scolaire,total_revenus,total_depenses,total_bourses,solde_final,date_generation,responsable_validation,statut,observation"|split:"," %}
+{{ block.super }}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endblock %} 

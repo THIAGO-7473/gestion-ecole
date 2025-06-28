@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Liste des Classes{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-school"></i> Liste des Classes
+            </h5>
+            <a href="{% url 'administrative:classe_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Nouvelle Classe
+            </a>
+        </div>
+        <div class="card-body">
+            <!-- Filtres -->
+            <form method="get" class="mb-4">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="search">Recherche</label>
+                            <input type="text" class="form-control" id="search" name="q" 
+                                   value="{{ query }}" placeholder="Rechercher une classe...">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="niveau">Niveau</label>
+                            <select class="form-control" id="niveau" name="niveau">
+                                <option value="">Tous les niveaux</option>
+                                {% for niveau in niveaux %}
+                                    <option value="{{ niveau }}" {% if niveau_filter == niveau %}selected{% endif %}>
+                                        {{ niveau }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="filiere">Filière</label>
+                            <select class="form-control" id="filiere" name="filiere">
+                                <option value="">Toutes les filières</option>
+                                {% for filiere in filieres %}
+                                    <option value="{{ filiere }}" {% if filiere_filter == filiere %}selected{% endif %}>
+                                        {{ filiere }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-filter"></i> Filtrer
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Tableau des classes -->
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Niveau</th>
+                            <th>Filière</th>
+                            <th>Effectif</th>
+                            <th>Enseignant Principal</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for classe in classes %}
+                        <tr>
+                            <td>{{ classe.nom }}</td>
+                            <td>{{ classe.niveau }}</td>
+                            <td>{{ classe.filiere }}</td>
+                            <td>{{ classe.effectif }}</td>
+                            <td>
+                                {% if classe.enseignant_principal %}
+                                    {{ classe.enseignant_principal.nom }} {{ classe.enseignant_principal.postnom }} {{ classe.enseignant_principal.prenom }}
+                                {% else %}
+                                    <span class="text-muted">Non assigné</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'administrative:classe_detail' classe.pk %}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'administrative:classe_update' classe.pk %}" class="btn btn-warning btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'administrative:classe_delete' classe.pk %}" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center">Aucune classe trouvée</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
