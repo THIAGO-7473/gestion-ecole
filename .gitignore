@@ -1,0 +1,20 @@
+# Fichiers Python inutiles
+*.pyc
+__pycache__/
+
+# Base de données locale
+db.sqlite3
+
+# Fichier d'environnement (si tu en utilises un)
+.env
+
+# Logs
+*.log
+
+# Répertoires de l’éditeur
+.vscode/
+cursor.json
+
+# Fichiers système
+.DS_Store
+Thumbs.db
