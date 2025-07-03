@@ -842,7 +842,7 @@ def contrat_create(request):
                 import traceback
                 print(f"Traceback: {traceback.format_exc()}")  # Debug
                 messages.error(request, f'Erreur lors de la création du contrat: {str(e)}')
-        else:
+    else:
             print(f"Form errors: {form.errors}")  # Debug
             print(f"Form non_field_errors: {form.non_field_errors()}")  # Debug
             for field, errors in form.errors.items():
@@ -917,7 +917,7 @@ def contrat_update(request, pk):
                 import traceback
                 print(f"Traceback: {traceback.format_exc()}")  # Debug
                 messages.error(request, f'Erreur lors de la mise à jour du contrat: {str(e)}')
-        else:
+    else:
             print(f"Form errors: {form.errors}")  # Debug
             print(f"Form non_field_errors: {form.non_field_errors()}")  # Debug
             for field, errors in form.errors.items():
@@ -1301,7 +1301,7 @@ def participation_update(request, pk):
                 import traceback
                 print(f"Traceback: {traceback.format_exc()}")  # Debug
                 messages.error(request, f'Erreur lors de la mise à jour de la participation: {str(e)}')
-        else:
+    else:
             print(f"Form errors: {form.errors}")  # Debug
             print(f"Form non_field_errors: {form.non_field_errors()}")  # Debug
             for field, errors in form.errors.items():
@@ -1393,7 +1393,7 @@ def rapport_create(request):
                 import traceback
                 print(f"Traceback: {traceback.format_exc()}")  # Debug
                 messages.error(request, f'Erreur lors de la création du rapport: {str(e)}')
-        else:
+    else:
             print(f"Form errors: {form.errors}")  # Debug
             print(f"Form non_field_errors: {form.non_field_errors()}")  # Debug
             for field, errors in form.errors.items():
@@ -1468,7 +1468,7 @@ def rapport_update(request, pk):
                 import traceback
                 print(f"Traceback: {traceback.format_exc()}")  # Debug
                 messages.error(request, f'Erreur lors de la mise à jour du rapport: {str(e)}')
-        else:
+    else:
             print(f"Form errors: {form.errors}")  # Debug
             print(f"Form non_field_errors: {form.non_field_errors()}")  # Debug
             for field, errors in form.errors.items():

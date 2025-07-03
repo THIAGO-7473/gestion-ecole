@@ -1,367 +1,526 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Administration{% endblock %}
+{% block title %}Tableau de Bord Administratif{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-card {
+        transition: all 0.3s ease;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px 15px 0 0 !important;
+        padding: 1.5rem;
+    }
+
+    .stat-card {
+        border-left: 5px solid;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .stat-card.primary { border-left-color: #4e73df; }
+    .stat-card.success { border-left-color: #1cc88a; }
+    .stat-card.info { border-left-color: #36b9cc; }
+    .stat-card.warning { border-left-color: #f6c23e; }
+    .stat-card.danger { border-left-color: #e74a3b; }
+    .stat-card.secondary { border-left-color: #858796; }
+    .stat-card.dark { border-left-color: #5a5c69; }
+
+    .stat-icon {
+        font-size: 2.5rem;
+        opacity: 0.8;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #5a5c69;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .category-section {
+        margin-bottom: 2rem;
+    }
+
+    .category-title {
+        color: #5a5c69;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e3e6f0;
+    }
+
+    .quick-actions {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .quick-action-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .quick-action-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .welcome-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .welcome-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .welcome-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">Tableau de bord administratif</h2>
-
-    <div class="row">
-        <!-- Carte Élèves -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-user-graduate"></i> Élèves
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ eleves_count }}</strong> élèves enregistrés
+<div class="container-fluid mt-4">
+    <!-- Section de bienvenue -->
+    <div class="welcome-section">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="welcome-title">
+                    <i class="fas fa-tachometer-alt me-3"></i>
+                    Tableau de Bord Administratif
+                </h1>
+                <p class="welcome-subtitle mb-0">
+                    Gérez efficacement votre établissement scolaire avec tous les outils nécessaires
                     </p>
-                    <a href="{% url 'administrative:eleve_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
+            </div>
+            <div class="col-md-4 text-end">
+                <i class="fas fa-school fa-4x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+
+    <!-- Actions rapides -->
+    <div class="quick-actions">
+        <h4 class="mb-3">
+            <i class="fas fa-bolt me-2"></i>Actions Rapides
+        </h4>
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <a href="{% url 'administrative:eleve_create' %}" class="btn quick-action-btn w-100">
+                    <i class="fas fa-user-plus me-2"></i>Nouvel Élève
+                </a>
+            </div>
+            <div class="col-md-3 mb-2">
+                <a href="{% url 'administrative:contrat_create' %}" class="btn quick-action-btn w-100">
+                    <i class="fas fa-file-contract me-2"></i>Nouveau Contrat
+                </a>
+            </div>
+            <div class="col-md-3 mb-2">
+                <a href="{% url 'administrative:rapport_create' %}" class="btn quick-action-btn w-100">
+                    <i class="fas fa-chart-bar me-2"></i>Nouveau Rapport
+                </a>
+            </div>
+            <div class="col-md-3 mb-2">
+                <a href="{% url 'administrative:formation_create' %}" class="btn quick-action-btn w-100">
+                    <i class="fas fa-graduation-cap me-2"></i>Nouvelle Formation
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Carte Classes -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
+    <!-- Statistiques principales -->
+    <div class="category-section">
+        <h3 class="category-title">
+            <i class="fas fa-chart-line me-2"></i>Statistiques Principales
+        </h3>
+        <div class="row">
+            <!-- Élèves -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card primary dashboard-card">
                 <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-school"></i> Classes
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ classes_count }}</strong> classes créées
-                    </p>
-                    <a href="{% url 'administrative:classe_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="stat-label text-primary">Élèves</div>
+                                <div class="stat-number">{{ eleves_count }}</div>
+                                <small class="text-muted">élèves enregistrés</small>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-user-graduate stat-icon text-primary"></i>
+                            </div>
+                        </div>
+                        <a href="{% url 'administrative:eleve_list' %}" class="btn btn-sm btn-outline-primary mt-2 w-100">
+                            <i class="fas fa-list me-1"></i>Voir la liste
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Carte Matières -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
+            <!-- Classes -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card success dashboard-card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="stat-label text-success">Classes</div>
+                                <div class="stat-number">{{ classes_count }}</div>
+                                <small class="text-muted">classes créées</small>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-school stat-icon text-success"></i>
+                            </div>
+                        </div>
+                        <a href="{% url 'administrative:classe_list' %}" class="btn btn-sm btn-outline-success mt-2 w-100">
+                            <i class="fas fa-list me-1"></i>Voir la liste
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Établissements -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card warning dashboard-card">
                 <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-book"></i> Matières
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ matieres_count }}</strong> matières enregistrées
-                    </p>
-                    <a href="{% url 'administrative:matiere_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="stat-label text-warning">Établissements</div>
+                                <div class="stat-number">{{ etablissements_count }}</div>
+                                <small class="text-muted">établissements</small>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-building stat-icon text-warning"></i>
+                            </div>
+                        </div>
+                        <a href="{% url 'administrative:etablissement_list' %}" class="btn btn-sm btn-outline-warning mt-2 w-100">
+                            <i class="fas fa-list me-1"></i>Voir la liste
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Carte Salles -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
+            <!-- Cours -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card info dashboard-card">
                 <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-door-open"></i> Salles
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ salles_count }}</strong> salles disponibles
-                    </p>
-                    <a href="{% url 'administrative:salle_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="stat-label text-info">Cours</div>
+                                <div class="stat-number">{{ cours_count }}</div>
+                                <small class="text-muted">cours programmés</small>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-chalkboard-teacher stat-icon text-info"></i>
+                            </div>
+                        </div>
+                        <a href="{% url 'administrative:cours_list' %}" class="btn btn-sm btn-outline-info mt-2 w-100">
+                            <i class="fas fa-list me-1"></i>Voir la liste
+                    </a>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Gestion académique -->
+    <div class="category-section">
+        <h3 class="category-title">
+            <i class="fas fa-graduation-cap me-2"></i>Gestion Académique
+        </h3>
+        <div class="row">
+            <!-- Matières -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card secondary dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-book stat-icon text-secondary mb-2"></i>
+                        <h5 class="stat-number">{{ matieres_count }}</h5>
+                        <p class="stat-label text-secondary">Matières</p>
+                        <a href="{% url 'administrative:matiere_list' %}" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-list me-1"></i>Gérer
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Carte Cours -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-chalkboard-teacher"></i> Cours
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ cours_count }}</strong> cours programmés
-                    </p>
-                    <a href="{% url 'administrative:cours_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
+            <!-- Notes -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card primary dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-star stat-icon text-primary mb-2"></i>
+                        <h5 class="stat-number">{{ notes_count }}</h5>
+                        <p class="stat-label text-primary">Notes</p>
+                        <a href="{% url 'administrative:note_list' %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-list me-1"></i>Gérer
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Carte Établissements -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-building"></i> Établissements
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ etablissements_count }}</strong> établissements
-                    </p>
-                    <a href="{% url 'administrative:etablissement_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
+            <!-- Salles -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card dark dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-door-open stat-icon text-dark mb-2"></i>
+                        <h5 class="stat-number">{{ salles_count }}</h5>
+                        <p class="stat-label text-dark">Salles</p>
+                        <a href="{% url 'administrative:salle_list' %}" class="btn btn-sm btn-outline-dark">
+                            <i class="fas fa-list me-1"></i>Gérer
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Carte Calendriers -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-calendar-alt"></i> Calendriers
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ calendriers_count }}</strong> calendriers scolaires
-                    </p>
-                    <a href="{% url 'administrative:calendrier_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
+            <!-- Horaires -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card info dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-clock stat-icon text-info mb-2"></i>
+                        <h5 class="stat-number">{{ horaires_count }}</h5>
+                        <p class="stat-label text-info">Horaires</p>
+                        <a href="{% url 'administrative:horaire_list' %}" class="btn btn-sm btn-outline-info">
+                            <i class="fas fa-list me-1"></i>Gérer
+                    </a>
+                    </div>
+                </div>
+                </div>
+
+            <!-- Absences -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card danger dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-times stat-icon text-danger mb-2"></i>
+                        <h5 class="stat-number">{{ absences_count }}</h5>
+                        <p class="stat-label text-danger">Absences</p>
+                        <a href="{% url 'administrative:absence_list' %}" class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-list me-1"></i>Gérer
+                    </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Examens -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card warning dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-file-alt stat-icon text-warning mb-2"></i>
+                        <h5 class="stat-number">{{ examens_count }}</h5>
+                        <p class="stat-label text-warning">Examens</p>
+                        <a href="{% url 'administrative:examen_list' %}" class="btn btn-sm btn-outline-warning">
+                            <i class="fas fa-list me-1"></i>Gérer
+                        </a>
+            </div>
+        </div>
+            </div>
+            </div>
+        </div>
+
+    <!-- Gestion administrative -->
+    <div class="category-section">
+        <h3 class="category-title">
+            <i class="fas fa-cogs me-2"></i>Gestion Administrative
+        </h3>
+        <div class="row">
+            <!-- Contrats -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card success dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-file-contract stat-icon text-success mb-2"></i>
+                        <h5 class="stat-number">{{ contrats_count }}</h5>
+                        <p class="stat-label text-success">Contrats</p>
+                        <a href="{% url 'administrative:contrat_list' %}" class="btn btn-sm btn-outline-success">
+                            <i class="fas fa-list me-1"></i>Gérer
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Carte Événements -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-calendar-day"></i> Événements
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ evenements_count }}</strong> événements planifiés
-                    </p>
-                    <a href="{% url 'administrative:evenement_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
+            <!-- Congés -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card warning dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-umbrella-beach stat-icon text-warning mb-2"></i>
+                        <h5 class="stat-number">{{ conges_count }}</h5>
+                        <p class="stat-label text-warning">Congés</p>
+                        <a href="{% url 'administrative:conge_list' %}" class="btn btn-sm btn-outline-warning">
+                            <i class="fas fa-list me-1"></i>Gérer
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Carte Horaires -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-clock"></i> Horaires
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ horaires_count }}</strong> horaires de cours
-                    </p>
-                    <a href="{% url 'administrative:horaire_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
-                    </a>
-                </div>
-
-        <!-- Carte Emplois du Temps -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-calendar-week"></i> Emplois du Temps
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ emplois_du_temps_count }}</strong> emplois du temps
-                    </p>
-                    <a href="{% url 'administrative:emploi_du_temps_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
+            <!-- Rapports -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card info dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-chart-bar stat-icon text-info mb-2"></i>
+                        <h5 class="stat-number">{{ rapports_count }}</h5>
+                        <p class="stat-label text-info">Rapports</p>
+                        <a href="{% url 'administrative:rapport_list' %}" class="btn btn-sm btn-outline-info">
+                            <i class="fas fa-list me-1"></i>Gérer
                     </a>
                 </div>
             </div>
         </div>
 
+            <!-- Bulletins -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card danger dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-file-pdf stat-icon text-danger mb-2"></i>
+                        <h5 class="stat-number">{{ bulletins_count }}</h5>
+                        <p class="stat-label text-danger">Bulletins</p>
+                        <a href="{% url 'administrative:bulletin_list' %}" class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-list me-1"></i>Gérer
+                    </a>
+                    </div>
+                </div>
+                </div>
             </div>
         </div>
 
-        <!-- Carte Absences -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-user-times"></i> Absences
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ absences_count }}</strong> absences enregistrées
-                    </p>
-                    <a href="{% url 'administrative:absence_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
+    <!-- Formation et événements -->
+    <div class="category-section">
+        <h3 class="category-title">
+            <i class="fas fa-calendar-alt me-2"></i>Formation et Événements
+        </h3>
+        <div class="row">
+            <!-- Formations -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card stat-card primary dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-graduation-cap stat-icon text-primary mb-2"></i>
+                        <h5 class="stat-number">{{ formations_count }}</h5>
+                        <p class="stat-label text-primary">Formations</p>
+                        <a href="{% url 'administrative:formation_list' %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-list me-1"></i>Gérer
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Carte Inscriptions -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-user-plus"></i> Inscriptions
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ inscriptions_count }}</strong> inscriptions
-                    </p>
-                    <a href="{% url 'administrative:inscription_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
+            <!-- Participations -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card stat-card success dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users stat-icon text-success mb-2"></i>
+                        <h5 class="stat-number">{{ participations_count }}</h5>
+                        <p class="stat-label text-success">Participations</p>
+                        <a href="{% url 'administrative:participation_list' %}" class="btn btn-sm btn-outline-success">
+                            <i class="fas fa-list me-1"></i>Gérer
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Carte Examens -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-file-alt"></i> Examens
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ examens_count }}</strong> examens programmés
-                    </p>
-                    <a href="{% url 'administrative:examen_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
+            <!-- Événements -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card stat-card warning dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-day stat-icon text-warning mb-2"></i>
+                        <h5 class="stat-number">{{ evenements_count }}</h5>
+                        <p class="stat-label text-warning">Événements</p>
+                        <a href="{% url 'administrative:evenement_list' %}" class="btn btn-sm btn-outline-warning">
+                            <i class="fas fa-list me-1"></i>Gérer
+                    </a>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- Autres éléments -->
+    <div class="category-section">
+        <h3 class="category-title">
+            <i class="fas fa-tools me-2"></i>Autres Éléments
+        </h3>
+        <div class="row">
+            <!-- Calendriers -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card info dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-alt stat-icon text-info mb-2"></i>
+                        <h5 class="stat-number">{{ calendriers_count }}</h5>
+                        <p class="stat-label text-info">Calendriers</p>
+                        <a href="{% url 'administrative:calendrier_list' %}" class="btn btn-sm btn-outline-info">
+                            <i class="fas fa-list me-1"></i>Gérer
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Carte Notes -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-star"></i> Notes
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ notes_count }}</strong> notes enregistrées
-                    </p>
-                    <a href="{% url 'administrative:note_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
+            <!-- Emplois du temps -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card secondary dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-week stat-icon text-secondary mb-2"></i>
+                        <h5 class="stat-number">{{ emplois_du_temps_count }}</h5>
+                        <p class="stat-label text-secondary">Emplois du temps</p>
+                        <a href="{% url 'administrative:emploi_du_temps_list' %}" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-list me-1"></i>Gérer
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Carte Bulletins -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-file-pdf"></i> Bulletins
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ bulletins_count }}</strong> bulletins générés
-                    </p>
-                    <a href="{% url 'administrative:bulletin_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
+            <!-- Jours fériés -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card dark dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-times stat-icon text-dark mb-2"></i>
+                        <h5 class="stat-number">{{ jours_feries_count }}</h5>
+                        <p class="stat-label text-dark">Jours fériés</p>
+                        <a href="{% url 'administrative:jour_ferie_list' %}" class="btn btn-sm btn-outline-dark">
+                            <i class="fas fa-list me-1"></i>Gérer
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- Carte Contrats -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-file-contract"></i> Contrats
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ contrats_count }}</strong> contrats en cours
-                    </p>
-                    <a href="{% url 'administrative:contrat_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
+            <!-- Inscriptions -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card stat-card danger dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-user-plus stat-icon text-danger mb-2"></i>
+                        <h5 class="stat-number">{{ inscriptions_count }}</h5>
+                        <p class="stat-label text-danger">Inscriptions</p>
+                        <a href="{% url 'administrative:inscription_list' %}" class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-list me-1"></i>Gérer
                     </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Carte Congés -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-umbrella-beach"></i> Congés
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ conges_count }}</strong> demandes de congés
-                    </p>
-                    <a href="{% url 'administrative:conge_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Carte Formations -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-graduation-cap"></i> Formations
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ formations_count }}</strong> formations planifiées
-                    </p>
-                    <a href="{% url 'administrative:formation_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Carte Participations -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-users"></i> Participations
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ participations_count }}</strong> participations aux formations
-                    </p>
-                    <a href="{% url 'administrative:participation_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Carte Rapports -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-chart-bar"></i> Rapports
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ rapports_count }}</strong> rapports administratifs
-                    </p>
-                    <a href="{% url 'administrative:rapport_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Carte Jours Fériés -->
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fas fa-calendar-times"></i> Jours Fériés
-                    </h5>
-                    <p class="card-text">
-                        <strong>{{ jours_feries_count }}</strong> jours fériés
-                    </p>
-                    <a href="{% url 'administrative:jour_ferie_list' %}" class="btn btn-primary">
-                        <i class="fas fa-list"></i> Voir la liste
-                    </a>
+                    </div>
                 </div>
             </div>
         </div>

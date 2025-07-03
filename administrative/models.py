@@ -119,6 +119,11 @@ class Eleve(models.Model):
     def __str__(self):
         return f"{self.nom} {self.postnom} {self.prenom}"
 
+    @property
+    def nom_complet(self):
+        """Retourne le nom complet de l'élève"""
+        return f"{self.nom} {self.postnom} {self.prenom}"
+
 class Cours(models.Model):
     nom = models.CharField(max_length=100)
     matiere = models.ForeignKey(Matiere, on_delete=models.CASCADE)
@@ -378,7 +383,7 @@ class Formation(models.Model):
     formateur = models.CharField(max_length=200, null=True, blank=True)
     organisateur = models.CharField(max_length=200, null=True, blank=True)
     cout = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    devise = models.CharField(max_length=3, choices=DEVISE_CHOICES, default='FC')
+    devise = models.CharField(max_length=3, choices=DEVISE_CHOICES, default='$')
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='planifie')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -430,6 +435,15 @@ class AttestationParticipation(models.Model):
     def __str__(self):
         return f"{self.nom} - {self.participation}"
 
+class DocumentRapport(models.Model):
+    rapport = models.ForeignKey('RapportAdministratif', on_delete=models.CASCADE, related_name='documents')
+    fichier = models.FileField(upload_to='rapports_administratifs/documents/')
+    nom = models.CharField(max_length=255)
+    date_upload = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.nom} - {self.rapport}"
+
 class RapportAdministratif(models.Model):
     STATUT_CHOICES = [
         ('en_attente', 'En attente'),
@@ -449,7 +463,6 @@ class RapportAdministratif(models.Model):
     responsable_validation = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
     observation = models.TextField(blank=True)
-    document_pdf = models.FileField(upload_to='rapports_administratifs/', null=True, blank=True)
 
     def __str__(self):
         return f"Rapport {self.annee_scolaire}"

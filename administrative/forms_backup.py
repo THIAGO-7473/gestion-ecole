@@ -40,6 +40,30 @@ class EleveForm(forms.ModelForm):
             if self.instance.date_naissance:
                 self.initial['date_naissance'] = self.instance.date_naissance.strftime('%Y-%m-%d')
 
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                contrat=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
+
 class JourFerieForm(forms.ModelForm):
     class Meta:
         model = JourFerie
@@ -58,6 +82,30 @@ class JourFerieForm(forms.ModelForm):
             if self.instance.date:
                 self.initial['date'] = self.instance.date.strftime('%Y-%m-%d')
 
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                conge=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
+
 class MatiereForm(forms.ModelForm):
     class Meta:
         model = Matiere
@@ -68,6 +116,30 @@ class MatiereForm(forms.ModelForm):
             'niveau': forms.TextInput(attrs={'class': 'form-control'})
         }
 
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                formation=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
+
 class SalleForm(forms.ModelForm):
     class Meta:
         model = Salle
@@ -77,6 +149,30 @@ class SalleForm(forms.ModelForm):
             'capacite': forms.NumberInput(attrs={'class': 'form-control'}),
             'equipements': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
+
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                contrat=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
 
 class ClasseForm(forms.ModelForm):
     class Meta:
@@ -90,6 +186,30 @@ class ClasseForm(forms.ModelForm):
             'enseignant_principal': forms.Select(attrs={'class': 'form-control'})
         }
 
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                contrat=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
+
 class EmploiDuTempsForm(forms.ModelForm):
     class Meta:
         model = EmploiDuTemps
@@ -99,6 +219,30 @@ class EmploiDuTempsForm(forms.ModelForm):
             'heure_debut': forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'}),
             'heure_fin': forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'})
         }
+
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                contrat=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
 
 class CoursForm(forms.ModelForm):
     class Meta:
@@ -115,6 +259,30 @@ class CoursForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
         }
 
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                formation=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
+
 class EtablissementForm(forms.ModelForm):
     class Meta:
         model = Etablissement
@@ -126,6 +294,30 @@ class EtablissementForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'logo': forms.FileInput(attrs={'class': 'form-control'}),
         }
+
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                contrat=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
 
 class CalendrierScolaireForm(forms.ModelForm):
     class Meta:
@@ -139,13 +331,35 @@ class CalendrierScolaireForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Si c'est une modification (instance existante)
-        if self.instance.pk:
-            # Conserver les dates existantes
+        if self.instance.pk:  # Si c'est une modification
             if self.instance.date_debut:
                 self.initial['date_debut'] = self.instance.date_debut.strftime('%Y-%m-%d')
             if self.instance.date_fin:
                 self.initial['date_fin'] = self.instance.date_fin.strftime('%Y-%m-%d')
+
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                contrat=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
 
 class EvenementForm(forms.ModelForm):
     class Meta:
@@ -169,6 +383,30 @@ class EvenementForm(forms.ModelForm):
             if self.instance.date:
                 self.initial['date'] = self.instance.date.strftime('%Y-%m-%d')
 
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                contrat=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
+
 class HoraireCoursForm(forms.ModelForm):
     class Meta:
         model = HoraireCours
@@ -177,6 +415,30 @@ class HoraireCoursForm(forms.ModelForm):
             'cours': forms.Select(attrs={'class': 'form-control'}),
             'emploi_du_temps': forms.Select(attrs={'class': 'form-control'}),
         }
+
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                contrat=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
 
 class AbsenceForm(forms.ModelForm):
     class Meta:
@@ -190,6 +452,30 @@ class AbsenceForm(forms.ModelForm):
             'justification': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'observation': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
+
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                contrat=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
 
 class InscriptionForm(forms.ModelForm):
     class Meta:
@@ -205,6 +491,30 @@ class InscriptionForm(forms.ModelForm):
             'dossier': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'statut': forms.Select(attrs={'class': 'form-control'}),
         }
+
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                contrat=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
 
 class ExamenForm(forms.ModelForm):
     class Meta:
@@ -228,6 +538,30 @@ class ExamenForm(forms.ModelForm):
             if self.instance.date:
                 self.initial['date'] = self.instance.date.strftime('%Y-%m-%d')
 
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                contrat=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
+
 class NoteForm(forms.ModelForm):
     class Meta:
         model = Note
@@ -248,6 +582,30 @@ class NoteForm(forms.ModelForm):
             # Conserver la date d'évaluation existante
             if self.instance.date_evaluation:
                 self.initial['date_evaluation'] = self.instance.date_evaluation.strftime('%Y-%m-%d')
+
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                contrat=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
 
 class BulletinForm(forms.ModelForm):
     PERIODE_CHOICES = [
@@ -281,6 +639,30 @@ class BulletinForm(forms.ModelForm):
             if self.instance.date_edition:
                 self.initial['date_edition'] = self.instance.date_edition.strftime('%Y-%m-%d')
 
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                contrat=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
+
 class DocumentContratForm(forms.ModelForm):
     class Meta:
         model = DocumentContrat
@@ -290,7 +672,31 @@ class DocumentContratForm(forms.ModelForm):
             'nom': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-class MultipleFileInput(forms.FileInput):
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                contrat=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
+
+class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
 
     def __init__(self, attrs=None):
@@ -308,42 +714,14 @@ class MultipleFileInput(forms.FileInput):
         if hasattr(files, 'getlist'):
             result = files.getlist(name)
             print(f"Result: {result}")  # Debug
-            print(f"Nombre de fichiers: {len(result) if result else 0}")  # Debug
             return result
         return files.get(name)
-
-    def value_omitted_from_data(self, data, files, name):
-        print(f"=== MultipleFileInput.value_omitted_from_data ===")  # Debug
-        print(f"Name: {name}")  # Debug
-        print(f"Files: {files}")  # Debug
-        print(f"Data: {data}")  # Debug
-
-        if not files:
-            print("Aucun fichier dans files")  # Debug
-            return True
-
-        if name not in files:
-            print(f"Nom '{name}' pas dans files")  # Debug
-            return True
-
-        file_list = files.getlist(name) if hasattr(files, 'getlist') else [files.get(name)]
-        print(f"File list: {file_list}")  # Debug
-
-        # Vérifier si tous les fichiers sont vides
-        for file in file_list:
-            if file and file.size > 0:
-                print(f"Fichier valide trouvé: {file.name}")  # Debug
-                return False
-
-        print("Aucun fichier valide trouvé")  # Debug
-        return True
 
 class ContratForm(forms.ModelForm):
     documents = forms.FileField(
         widget=MultipleFileInput(attrs={'class': 'form-control'}),
         required=False,
-        label="Documents du Contrat",
-        help_text="Vous pouvez sélectionner plusieurs fichiers"
+        label="Documents du Contrat"
     )
 
     class Meta:
@@ -374,35 +752,38 @@ class ContratForm(forms.ModelForm):
             if self.instance.salaire_brut:
                 self.initial['salaire_brut'] = self.instance.salaire_brut
 
-    def clean_documents(self):
-        """Validation personnalisée pour le champ documents"""
-        documents = self.cleaned_data.get('documents')
-        print(f"=== clean_documents ===")  # Debug
-        print(f"Documents reçus: {documents}")  # Debug
-        print(f"Type: {type(documents)}")  # Debug
-
-        if documents:
-            if isinstance(documents, list):
-                print(f"Nombre de fichiers: {len(documents)}")  # Debug
-                for i, doc in enumerate(documents):
-                    print(f"Fichier {i+1}: {doc.name} - {doc.size} bytes")  # Debug
-            else:
-                print(f"Fichier unique: {documents.name} - {documents.size} bytes")  # Debug
-
-        return documents
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
 
     def save(self, commit=True):
-        print("=== DÉBUT save ContratForm ===")  # Debug
-        print(f"Commit: {commit}")  # Debug
-
         instance = super().save(commit=commit)
-        print(f"Instance créée: {instance}")  # Debug
-        print(f"Instance ID: {instance.id if instance.id else 'Pas encore sauvegardé'}")  # Debug
-
-        print("=== FIN save ContratForm ===")  # Debug
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                contrat=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
         return instance
 
 class CongeForm(forms.ModelForm):
+    justificatifs = forms.FileField(
+        widget=MultipleFileInput(attrs={'class': 'form-control'}),
+        required=False,
+        label="Documents Justificatifs",
+        help_text='Vous pouvez sélectionner plusieurs fichiers'
+    )
+
     class Meta:
         model = Conge
         fields = ['personnel', 'enseignant', 'type_conge', 'date_debut', 'date_fin', 'jours_ouvrables', 'statut', 'motif', 'approuve_par', 'date_approbation']
@@ -428,6 +809,10 @@ class CongeForm(forms.ModelForm):
                 self.initial['date_fin'] = self.instance.date_fin.strftime('%Y-%m-%d')
             if self.instance.date_approbation:
                 self.initial['date_approbation'] = self.instance.date_approbation.strftime('%Y-%m-%d')
+
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
 
     def clean(self):
         print("=== DÉBUT clean CongeForm ===")  # Debug
@@ -469,6 +854,26 @@ class CongeForm(forms.ModelForm):
             print(f"Self.files content: {self.files}")  # Debug
 
         instance = super().save(commit=commit)
+
+        if commit and hasattr(self, 'files') and self.files:
+            # Gérer les fichiers uploadés
+            files = self.files.getlist('justificatifs')
+            print(f"Fichiers à traiter: {files}")  # Debug
+
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                conge=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+
         print(f"Instance créée: {instance}")  # Debug
         print(f"Instance ID: {instance.id if instance.id else 'Pas encore sauvegardé'}")  # Debug
         print("=== FIN save CongeForm ===")  # Debug
@@ -503,6 +908,10 @@ class FormationForm(forms.ModelForm):
             if self.instance.date_fin:
                 self.initial['date_fin'] = self.instance.date_fin.strftime('%Y-%m-%d')
 
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
     def clean(self):
         cleaned_data = super().clean()
         date_debut = cleaned_data.get('date_debut')
@@ -512,6 +921,26 @@ class FormationForm(forms.ModelForm):
             raise forms.ValidationError("La date de fin doit être postérieure à la date de début.")
 
         return cleaned_data
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        if commit:
+            # Gérer les fichiers uploadés
+            files = self.files
+            if files:
+                for file in files:
+                    if file:  # Vérifier que le fichier n'est pas vide
+                        print(f"Création DocumentConge pour: {file.name}")  # Debug
+                        try:
+                            DocumentConge.objects.create(
+                                formation=instance,
+                                fichier=file,
+                                nom=file.name
+                            )
+                            print(f"DocumentConge créé avec succès pour: {file.name}")  # Debug
+                        except Exception as e:
+                            print(f"Erreur lors de la création du DocumentConge: {str(e)}")  # Debug
+        return instance
 
 class ParticipationForm(forms.ModelForm):
     attestation_files = forms.FileField(
@@ -538,6 +967,10 @@ class ParticipationForm(forms.ModelForm):
         self.fields['enseignant'].queryset = Enseignant.objects.all()
         self.fields['personnel'].queryset = PersonnelAdministratif.objects.all()
 
+        # Passer les fichiers au formulaire si disponibles
+        if 'files' in kwargs:
+            self.files = kwargs['files']
+
     def clean(self):
         cleaned_data = super().clean()
         enseignant = cleaned_data.get('enseignant')
@@ -552,21 +985,29 @@ class ParticipationForm(forms.ModelForm):
 
         return cleaned_data
 
-class RapportAdministratifForm(forms.ModelForm):
-    document_pdf = forms.FileField(
-        widget=MultipleFileInput(attrs={'class': 'form-control'}),
-        required=False,
-        label="Documents PDF",
-        help_text="Vous pouvez sélectionner plusieurs fichiers PDF"
-    )
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if commit:
+            instance.save()
+            # Gérer les fichiers uploadés seulement s'ils existent
+            if hasattr(self, 'files') and self.files:
+                fichiers = self.files.getlist('attestation_files')
+                for fichier in fichiers:
+                    AttestationParticipation.objects.create(
+                        participation=instance,
+                        fichier=fichier,
+                        nom=fichier.name
+                    )
+        return instance
 
+class RapportAdministratifForm(forms.ModelForm):
     class Meta:
         model = RapportAdministratif
         fields = [
             'annee_scolaire', 'nombre_eleves_total', 'nombre_eleves_nouveaux',
             'nombre_eleves_exclus', 'nombre_enseignants', 'nombre_personnel_administratif',
             'evenements_importants', 'nombre_recompenses', 'date_generation',
-            'responsable_validation', 'statut', 'observation'
+            'responsable_validation', 'statut', 'observation', 'document_pdf'
         ]
         widgets = {
             'annee_scolaire': forms.TextInput(attrs={'class': 'form-control'}),
@@ -578,6 +1019,7 @@ class RapportAdministratifForm(forms.ModelForm):
             'evenements_importants': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'nombre_recompenses': forms.NumberInput(attrs={'class': 'form-control'}),
             'date_generation': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'document_pdf': forms.FileInput(attrs={'class': 'form-control'}),
             'responsable_validation': forms.Select(attrs={'class': 'form-control'}),
             'statut': forms.Select(attrs={'class': 'form-control'}),
             'observation': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),

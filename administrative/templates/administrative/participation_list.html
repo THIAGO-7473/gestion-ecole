@@ -17,12 +17,16 @@
         <div class="card-body">
             {% if participations %}
             <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
                         <tr>
                             <th>Formation</th>
+                            <th>Type Participant</th>
                             <th>Participant</th>
                             <th>Statut</th>
+                            <th>Évaluation Formateur</th>
+                            <th>Évaluation Formation</th>
+                            <th>Attestations</th>
                             <th>Date de Création</th>
                             <th>Actions</th>
                         </tr>
@@ -30,12 +34,43 @@
                     <tbody>
                         {% for participation in participations %}
                         <tr>
-                            <td>{{ participation.formation.intitule }}</td>
+                            <td>
+                                <strong>{{ participation.formation.intitule }}</strong>
+                                <br>
+                                <small class="text-muted">
+                                    {{ participation.formation.get_type_formation_display }} -
+                                    {{ participation.formation.date_debut|date:"d/m/Y" }} au {{ participation.formation.date_fin|date:"d/m/Y" }}
+                                </small>
+                            </td>
                             <td>
                                 {% if participation.enseignant %}
-                                    {{ participation.enseignant.get_full_name }}
+                                    <span class="badge bg-primary">Enseignant</span>
                                 {% else %}
-                                    {{ participation.personnel.get_full_name }}
+                                    <span class="badge bg-secondary">Personnel</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if participation.enseignant %}
+                                    <strong>{{ participation.enseignant.get_full_name }}</strong>
+                                    <br>
+                                    <small class="text-muted">
+                                        {% with specialites=participation.enseignant.specialiteenseignant_set.all %}
+                                            {% if specialites %}
+                                                {% for specialite in specialites|slice:":2" %}
+                                                    {{ specialite.matiere.nom }}{% if not forloop.last %}, {% endif %}
+                                                {% endfor %}
+                                                {% if specialites.count > 2 %}
+                                                    +{{ specialites.count|add:"-2" }} autre{{ specialites.count|add:"-2"|pluralize }}
+                                                {% endif %}
+                                            {% else %}
+                                                Aucune spécialité définie
+                                            {% endif %}
+                                        {% endwith %}
+                                    </small>
+                                {% else %}
+                                    <strong>{{ participation.personnel.get_full_name }}</strong>
+                                    <br>
+                                    <small class="text-muted">{{ participation.personnel.fonction|default:"Fonction non définie" }}</small>
                                 {% endif %}
                             </td>
                             <td>
@@ -46,20 +81,57 @@
                                     {{ participation.get_statut_participation_display }}
                                 </span>
                             </td>
-                            <td>{{ participation.created_at|date:"d/m/Y" }}</td>
                             <td>
-                                <a href="{% url 'administrative:participation_detail' participation.pk %}" 
-                                   class="btn btn-info btn-sm">
+                                {% if participation.evaluation_formateur %}
+                                    <div class="text-truncate" style="max-width: 150px;" title="{{ participation.evaluation_formateur }}">
+                                        {{ participation.evaluation_formateur|truncatechars:50 }}
+                                    </div>
+                                {% else %}
+                                    <span class="text-muted">Non évalué</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if participation.evaluation_formation %}
+                                    <div class="text-truncate" style="max-width: 150px;" title="{{ participation.evaluation_formation }}">
+                                        {{ participation.evaluation_formation|truncatechars:50 }}
+                                    </div>
+                                {% else %}
+                                    <span class="text-muted">Non évalué</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% with attestation_count=participation.attestations.count %}
+                                    {% if attestation_count > 0 %}
+                                        <span class="badge bg-success">{{ attestation_count }} attestation{{ attestation_count|pluralize }}</span>
+                                        <br>
+                                        <small class="text-muted">
+                                            Dernière: {{ participation.attestations.last.date_upload|date:"d/m/Y" }}
+                                        </small>
+                                    {% else %}
+                                        <span class="badge bg-warning">Aucune attestation</span>
+                                    {% endif %}
+                                {% endwith %}
+                            </td>
+                            <td>
+                                {{ participation.created_at|date:"d/m/Y" }}
+                                <br>
+                                <small class="text-muted">{{ participation.created_at|date:"H:i" }}</small>
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                <a href="{% url 'administrative:participation_detail' participation.pk %}"
+                                       class="btn btn-info btn-sm" title="Voir les détails">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="{% url 'administrative:participation_update' participation.pk %}" 
-                                   class="btn btn-warning btn-sm">
+                                <a href="{% url 'administrative:participation_update' participation.pk %}"
+                                       class="btn btn-warning btn-sm" title="Modifier">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="{% url 'administrative:participation_delete' participation.pk %}" 
-                                   class="btn btn-danger btn-sm">
+                                <a href="{% url 'administrative:participation_delete' participation.pk %}"
+                                       class="btn btn-danger btn-sm" title="Supprimer">
                                     <i class="fas fa-trash"></i>
                                 </a>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
@@ -74,4 +146,29 @@
         </div>
     </div>
 </div>
-{% endblock %} 
+
+<style>
+.table th {
+    vertical-align: middle;
+    font-weight: 600;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.btn-group .btn {
+    margin-right: 2px;
+}
+
+.btn-group .btn:last-child {
+    margin-right: 0;
+}
+</style>
+{% endblock %}

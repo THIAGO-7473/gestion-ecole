@@ -5,58 +5,193 @@
 
 {% block content %}
 <div class="container mt-4">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">
-                <i class="fas fa-file-alt"></i> Détail du Rapport Administratif
-            </h5>
+    <!-- En-tête avec actions -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+                <i class="fas fa-file-alt"></i> Rapport Administratif - {{ rapport.annee_scolaire }}
+            </h4>
+            <div class="btn-group">
             <a href="{% url 'administrative:rapport_update' rapport.pk %}" class="btn btn-warning">
                 <i class="fas fa-edit"></i> Modifier
             </a>
+                <a href="{% url 'administrative:rapport_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Retour
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Informations principales -->
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Informations Générales</h5>
         </div>
         <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-6"><strong>Année scolaire</strong></dt>
+                                <dd class="col-sm-6">
+                                    <span class="badge bg-primary fs-6">{{ rapport.annee_scolaire }}</span>
+                                </dd>
+
+                                <dt class="col-sm-6"><strong>Date de génération</strong></dt>
+                                <dd class="col-sm-6">{{ rapport.date_generation|date:"d/m/Y" }}</dd>
+
+                                <dt class="col-sm-6"><strong>Statut</strong></dt>
+                                <dd class="col-sm-6">
+                                    <span class="badge {% if rapport.statut == 'valide' %}bg-success
+                                                      {% elif rapport.statut == 'refuse' %}bg-danger
+                                                      {% else %}bg-warning{% endif %} fs-6">
+                                        {{ rapport.get_statut_display }}
+                                    </span>
+                                </dd>
+
+                                <dt class="col-sm-6"><strong>Responsable</strong></dt>
+                                <dd class="col-sm-6">
+                                    {% if rapport.responsable_validation %}
+                                        <i class="fas fa-user"></i> {{ rapport.responsable_validation.get_full_name }}
+                                    {% else %}
+                                        <span class="text-muted">Non assigné</span>
+                                    {% endif %}
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
             <dl class="row">
-                <dt class="col-sm-4">Année scolaire</dt>
-                <dd class="col-sm-8">{{ rapport.annee_scolaire }}</dd>
-                <dt class="col-sm-4">Nombre total d'élèves</dt>
-                <dd class="col-sm-8">{{ rapport.nombre_eleves_total }}</dd>
-                <dt class="col-sm-4">Nombre d'élèves nouveaux</dt>
-                <dd class="col-sm-8">{{ rapport.nombre_eleves_nouveaux }}</dd>
-                <dt class="col-sm-4">Nombre d'élèves exclus</dt>
-                <dd class="col-sm-8">{{ rapport.nombre_eleves_exclus }}</dd>
-                <dt class="col-sm-4">Nombre d'enseignants</dt>
-                <dd class="col-sm-8">{{ rapport.nombre_enseignants }}</dd>
-                <dt class="col-sm-4">Nombre de personnel administratif</dt>
-                <dd class="col-sm-8">{{ rapport.nombre_personnel_administratif }}</dd>
-                <dt class="col-sm-4">Événements importants</dt>
-                <dd class="col-sm-8">{{ rapport.evenements_importants }}</dd>
-                <dt class="col-sm-4">Nombre de récompenses</dt>
-                <dd class="col-sm-8">{{ rapport.nombre_recompenses }}</dd>
-                <dt class="col-sm-4">Date de génération</dt>
-                <dd class="col-sm-8">{{ rapport.date_generation|date:"d/m/Y" }}</dd>
-                <dt class="col-sm-4">Responsable validation</dt>
-                <dd class="col-sm-8">{{ rapport.responsable_validation.get_full_name|default:"-" }}</dd>
-                <dt class="col-sm-4">Statut</dt>
-                <dd class="col-sm-8">{{ rapport.get_statut_display }}</dd>
-                <dt class="col-sm-4">Observation</dt>
-                <dd class="col-sm-8">{{ rapport.observation }}</dd>
-                <dt class="col-sm-4">Document PDF</dt>
-                <dd class="col-sm-8">
-                    {% if rapport.document_pdf %}
-                        <a href="{{ rapport.document_pdf.url }}" target="_blank" class="btn btn-sm btn-primary">Télécharger PDF</a>
-                    {% else %}-{% endif %}
+                                <dt class="col-sm-6"><strong>Élèves total</strong></dt>
+                                <dd class="col-sm-6">
+                                    <span class="badge bg-info fs-6">{{ rapport.nombre_eleves_total }}</span>
+                                </dd>
+
+                                <dt class="col-sm-6"><strong>Élèves nouveaux</strong></dt>
+                                <dd class="col-sm-6">
+                                    <span class="badge bg-success fs-6">{{ rapport.nombre_eleves_nouveaux }}</span>
+                                </dd>
+
+                                <dt class="col-sm-6"><strong>Élèves exclus</strong></dt>
+                                <dd class="col-sm-6">
+                                    <span class="badge bg-danger fs-6">{{ rapport.nombre_eleves_exclus }}</span>
                 </dd>
-                <dt class="col-sm-4">Documents supplémentaires</dt>
-                <dd class="col-sm-8">
-                    {% for doc in rapport.documents.all %}
-                        <a href="{{ doc.fichier.url }}" target="_blank" class="btn btn-sm btn-info mb-1">{{ doc.nom }}</a><br>
-                    {% empty %}-{% endfor %}
+
+                                <dt class="col-sm-6"><strong>Récompenses</strong></dt>
+                                <dd class="col-sm-6">
+                                    {% if rapport.nombre_recompenses > 0 %}
+                                        <span class="badge bg-warning text-dark fs-6">{{ rapport.nombre_recompenses }}</span>
+                                    {% else %}
+                                        <span class="text-muted">0</span>
+                                    {% endif %}
                 </dd>
             </dl>
-            <a href="{% url 'administrative:rapport_list' %}" class="btn btn-secondary mt-3">
-                <i class="fas fa-arrow-left"></i> Retour à la liste
-            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personnel -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-users"></i> Personnel</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-primary text-white rounded-circle p-3 me-3">
+                                    <i class="fas fa-chalkboard-teacher fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">Enseignants</h6>
+                                    <span class="badge bg-primary fs-5">{{ rapport.nombre_enseignants }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-secondary text-white rounded-circle p-3 me-3">
+                                    <i class="fas fa-user-tie fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">Personnel administratif</h6>
+                                    <span class="badge bg-secondary fs-5">{{ rapport.nombre_personnel_administratif }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Événements et observations -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="fas fa-calendar-alt"></i> Événements et Observations</h5>
+                </div>
+                <div class="card-body">
+                    {% if rapport.evenements_importants %}
+                    <div class="mb-4">
+                        <h6><i class="fas fa-star text-warning"></i> Événements importants</h6>
+                        <div class="alert alert-warning">
+                            {{ rapport.evenements_importants|linebreaks }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if rapport.observation %}
+                    <div>
+                        <h6><i class="fas fa-comment text-info"></i> Observations</h6>
+                        <div class="alert alert-info">
+                            {{ rapport.observation|linebreaks }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-file-pdf"></i> Documents</h5>
+                </div>
+                <div class="card-body">
+                    {% with documents_count=rapport.documents.count %}
+                        {% if documents_count > 0 %}
+                            <div class="mb-3">
+                                <span class="badge bg-success fs-6 mb-2">
+                                    <i class="fas fa-file-pdf"></i> {{ documents_count }} document(s)
+                                </span>
+                            </div>
+
+                            <div class="list-group">
+                                {% for doc in rapport.documents.all %}
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-file-pdf text-danger me-2"></i>
+                                        <div>
+                                            <h6 class="mb-0">{{ doc.nom|truncatechars:25 }}</h6>
+                                            <small class="text-muted">{{ doc.date_upload|date:"d/m/Y H:i" }}</small>
+                                        </div>
+                                    </div>
+                                    <a href="{{ doc.fichier.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-file-pdf fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">Aucun document attaché</p>
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
         </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}
